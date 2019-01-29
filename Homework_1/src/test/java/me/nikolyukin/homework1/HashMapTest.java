@@ -39,13 +39,13 @@ class HashMapTest {
     }
 
     @Test
-    void containsWhenNot() {
+    void containsWhenHasNot() {
         hashMap.put("a", "b");
         assertFalse(hashMap.contains("b"));
     }
 
     @Test
-    void containsWhenYes() {
+    void containsWhenHas() {
         hashMap.put("a", "b");
         assertTrue(hashMap.contains("a"));
     }
