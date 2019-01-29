@@ -53,7 +53,7 @@ public class HashMap {
                 throw new IllegalArgumentException("arguments of List.add() are null");
             }
 
-            var node = get(key);
+            var node = getNode(key);
             if (node != head) {
                 var previousValue = node.value;
                 node.value = value;
@@ -68,7 +68,7 @@ public class HashMap {
             if (key == null) {
                 throw new IllegalArgumentException("arguments of List.remove() are null");
             }
-            var node = get(key);
+            var node = getNode(key);
             if (node != head) {
                 size--;
                 node.next.prev = node.prev;
@@ -78,9 +78,9 @@ public class HashMap {
             return null;
         }
 
-        public Node get(String key) throws IllegalArgumentException {
+        public Node getNode(String key) throws IllegalArgumentException {
             if (key == null) {
-                throw new IllegalArgumentException("arguments of List.get() are null");
+                throw new IllegalArgumentException("arguments of List.getNode() are null");
             }
 
             for (Node current = head.next; current != head; current = current.next) {
