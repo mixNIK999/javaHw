@@ -3,13 +3,31 @@ package me.nikolyukin.homework1;
 public class HashMap {
     private List[] array;
     private int numberOfElements;
+    private int defaultSize;
 
     public HashMap(int size) {
+        defaultSize = size;
         array = new List[size];
     }
 
     public int size() {
         return numberOfElements;
+    }
+
+    public void resize(int size) {
+        if (size != array.length) {
+            var oldArray = array;
+            array = new List[size];
+            numberOfElements = 0;
+
+            for (int i = 0; i < oldArray.length; i++) {
+                if (oldArray[i] != null) {
+                    for (var j = oldArray[i].head.next; j != oldArray[i].head; j = j.next) {
+                        put(j.key, j.value);
+                    }
+                }
+            }
+        }
     }
 
     private List findList(String key) {
@@ -60,7 +78,7 @@ public class HashMap {
     }
 
     public void clear() {
-        array = new List[array.length];
+        array = new List[defaultSize];
         numberOfElements = 0;
     }
 
