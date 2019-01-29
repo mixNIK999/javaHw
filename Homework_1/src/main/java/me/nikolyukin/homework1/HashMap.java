@@ -91,6 +91,10 @@ public class HashMap {
             return head;
         }
 
+        public boolean contains(String key) {
+            return getNode(key) != head;
+        }
+
         private class Node {
             public String value;
             public String key;
