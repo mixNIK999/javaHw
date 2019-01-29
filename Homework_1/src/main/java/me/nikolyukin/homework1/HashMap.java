@@ -130,7 +130,7 @@ public class HashMap {
 
             public Node() {}
 
-            public Node(String value, String key, Node next, Node prev) {
+            public Node(String key, String value, Node prev, Node next) {
                 this.value = value;
                 this.key = key;
                 this.next = next;
