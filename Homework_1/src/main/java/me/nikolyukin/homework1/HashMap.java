@@ -34,6 +34,10 @@ public class HashMap {
             public void setValue(String value) {
                 this.value = value;
             }
+
+            public void setNext(Node next) {
+                this.next = next;
+            }
         }
     }
 }
