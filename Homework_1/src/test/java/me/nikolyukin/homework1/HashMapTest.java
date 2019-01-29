@@ -7,10 +7,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class HashMapTest {
     private HashMap hashMap;
+    private HashMap smallHashMapWithHugeCollection;
 
     @BeforeEach
     void initialHashMap() {
         hashMap = new HashMap(5);
+        smallHashMapWithHugeCollection = new HashMap(1);
+        for (char c = 'a'; c <= 'z'; c++) {
+            smallHashMapWithHugeCollection.put(Character.toString(c), Character.toString(c));
+        }
     }
 
     @Test
@@ -51,6 +56,13 @@ class HashMapTest {
     }
 
     @Test
+    void containsWhenManyCollisionsTrue() {
+        for (char c = 'a'; c <= 'z'; c++) {
+            assertTrue(smallHashMapWithHugeCollection.contains(Character.toString(c)));
+        }
+    }
+
+    @Test
     void getWhenEmpty() {
         assertNull(hashMap.get("a"));
     }
@@ -86,6 +98,14 @@ class HashMapTest {
     }
 
     @Test
+    void putWhenManyCollisions() {
+        for (char c = 'a'; c <= 'z'; c++) {
+            assertEquals(Character.toString(c), smallHashMapWithHugeCollection.put(Character.toString(c), "newValue"));
+
+        }
+    }
+
+    @Test
     void removeWhenEmpty() {
         assertNull(hashMap.remove("a"));
     }
@@ -100,6 +120,13 @@ class HashMapTest {
     void removeWhenHasNot() {
         hashMap.put("a", "b");
         assertNull(hashMap.remove("c"));
+    }
+
+    @Test
+    void removeWhenManyCollisions() {
+        for (char c = 'a'; c <= 'z'; c++) {
+            assertEquals(Character.toString(c), smallHashMapWithHugeCollection.remove(Character.toString(c)));
+        }
     }
 
     @Test
