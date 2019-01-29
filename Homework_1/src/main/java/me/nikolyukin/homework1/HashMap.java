@@ -1,6 +1,19 @@
 package me.nikolyukin.homework1;
 
 public class HashMap {
+
+    public int size() {}
+    
+    public boolean contains(String key) {}
+
+    public String get(String key) {}
+
+    public String put(String key, String value) {}
+
+    public String remove(String key) {}
+
+    public void clear() {}
+
     private class List {
 
         Node head;
