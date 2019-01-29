@@ -63,6 +63,11 @@ class HashMapTest {
     }
 
     @Test
+    void containsWhenGiveNull() {
+        assertThrows(IllegalArgumentException.class, () -> {hashMap.contains(null);});
+    }
+
+    @Test
     void getWhenEmpty() {
         assertNull(hashMap.get("a"));
     }
@@ -79,6 +84,10 @@ class HashMapTest {
         assertEquals("b",hashMap.get("a"));
     }
 
+    @Test
+    void getWhenGiveNull() {
+        assertThrows(IllegalArgumentException.class, () -> {hashMap.get(null);});
+    }
 
     @Test
     void putWhenEmpty() {
@@ -106,6 +115,11 @@ class HashMapTest {
     }
 
     @Test
+    void putWhenGiveNull() {
+        assertThrows(IllegalArgumentException.class, () -> {hashMap.put(null, null);});
+    }
+
+    @Test
     void removeWhenEmpty() {
         assertNull(hashMap.remove("a"));
     }
@@ -127,6 +141,11 @@ class HashMapTest {
         for (char c = 'a'; c <= 'z'; c++) {
             assertEquals(Character.toString(c), smallHashMapWithHugeCollection.remove(Character.toString(c)));
         }
+    }
+
+    @Test
+    void removeWhenGiveNull() {
+        assertThrows(IllegalArgumentException.class, () -> {hashMap.remove(null);});
     }
 
     @Test
