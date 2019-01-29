@@ -76,7 +76,7 @@ class HashMapTest {
     @Test
     void putWhenHas() {
         hashMap.put("a", "b");
-        assertEquals(" b", hashMap.put("a", "c"));
+        assertEquals("b", hashMap.put("a", "c"));
     }
 
     @Test
