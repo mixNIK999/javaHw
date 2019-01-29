@@ -1,9 +1,6 @@
 package me.nikolyukin.homework1;
 
-/**
- * Хеш-таблица с ключами и значениями типа String.
- */
-
+/** Хеш-таблица с ключами и значениями типа String. */
 public class HashMap {
     private List[] array;
     private int numberOfElements;
@@ -73,7 +70,7 @@ public class HashMap {
      * @return true, если данный ключ содержится в хеш-таблице
      * @throws IllegalArgumentException бросается в случае, если передали null как параметр
      */
-    public boolean contains(String key) throws IllegalArgumentException  {
+    public boolean contains(String key) throws IllegalArgumentException {
         if (key == null) {
             throw new IllegalArgumentException("arguments of HashMap.contains() are null");
         }
@@ -134,9 +131,7 @@ public class HashMap {
         return previousValue;
     }
 
-    /**
-     * Очищает хеш-таблицу. Размер приводится к исходному.
-     */
+    /** Очищает хеш-таблицу. Размер приводится к исходному. */
     public void clear() {
         array = new List[defaultSize];
         numberOfElements = 0;
@@ -147,7 +142,7 @@ public class HashMap {
         Node head;
         int size;
 
-        public List () {
+        public List() {
             head = new Node();
             head.next = head;
             head.prev = head;
@@ -179,7 +174,7 @@ public class HashMap {
                 node.value = value;
                 return previousValue;
             } else {
-                push (key, value);
+                push(key, value);
                 return null;
             }
         }
