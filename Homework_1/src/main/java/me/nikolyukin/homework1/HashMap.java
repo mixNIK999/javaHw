@@ -6,37 +6,26 @@ public class HashMap {
         Node head;
         int size;
 
+
+
+
+            }
+
+            }
+
         private class Node {
-            private String value;
-            private String key;
-            private Node next;
+            public String value;
+            public String key;
+            public Node next;
+            public Node prev;
 
             public Node() {}
 
-            public Node(String value, String key, Node next) {
+            public Node(String value, String key, Node next, Node prev) {
                 this.value = value;
                 this.key = key;
                 this.next = next;
-            }
-
-            public Node getNext() {
-                return next;
-            }
-
-            public String getKey() {
-                return key;
-            }
-
-            public String getValue() {
-                return value;
-            }
-
-            public void setValue(String value) {
-                this.value = value;
-            }
-
-            public void setNext(Node next) {
-                this.next = next;
+                this.prev = prev;
             }
         }
     }
