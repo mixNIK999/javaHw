@@ -1,9 +1,17 @@
 package me.nikolyukin.homework1;
 
 public class HashMap {
+    private List[] array;
+    private int numberOfElements;
 
-    public int size() {}
-    
+    public HashMap(int size) {
+        array = new List[size * 2]
+    }
+
+    public int size() {
+        return numberOfElements;
+    }
+
     public boolean contains(String key) {}
 
     public String get(String key) {}
