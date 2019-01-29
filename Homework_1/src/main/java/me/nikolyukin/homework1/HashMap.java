@@ -22,16 +22,19 @@ public class HashMap {
             node.next.prev = node;
         }
 
-        public void put(String key, String value) throws IllegalArgumentException {
+        public String put(String key, String value) throws IllegalArgumentException {
             if (key == null | value == null) {
                 throw new IllegalArgumentException("arguments of List.add() are null");
             }
 
             var node = get(key);
             if (node != head) {
+                var previousValue = node.value;
                 node.value = value;
+                return previousValue;
             } else {
                 push (key, value);
+                return null;
             }
         }
 
