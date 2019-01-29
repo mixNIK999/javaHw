@@ -22,7 +22,7 @@ public class HashMap {
             node.next.prev = node;
         }
 
-        public void add(String key, String value) throws IllegalArgumentException {
+        public void put(String key, String value) throws IllegalArgumentException {
             if (key == null | value == null) {
                 throw new IllegalArgumentException("arguments of List.add() are null");
             }
@@ -34,6 +34,7 @@ public class HashMap {
                 push (key, value);
             }
         }
+
 
         public Node get(String key) throws IllegalArgumentException {
             if (key == null) {
