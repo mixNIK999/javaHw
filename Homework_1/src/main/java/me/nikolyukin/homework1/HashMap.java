@@ -14,6 +14,10 @@ public class HashMap {
         return numberOfElements;
     }
 
+    public int getCapacity() {
+        return array.length;
+    }
+
     public void resize(int size) {
         if (size != array.length) {
             var oldArray = array;
