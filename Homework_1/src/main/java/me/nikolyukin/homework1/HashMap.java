@@ -20,13 +20,30 @@ public class HashMap {
         return findList(key).contains(key);
     }
 
-    public String get(String key) {}
+    public String get(String key) {
+        return findList(key).getNode(key).value;
+    }
 
-    public String put(String key, String value) {}
+    public String put(String key, String value) {
+        String previousValue = findList(key).put(key, value);
+        if (previousValue == null) {
+            numberOfElements++;
+        }
+        return previousValue;
+    }
 
-    public String remove(String key) {}
+    public String remove(String key) {
+        String previousValue = findList(key).remove(key);
+        if (previousValue != null) {
+            numberOfElements--;
+        }
+        return previousValue;
+    }
 
-    public void clear() {}
+    public void clear() {
+        array = new List[array.length / 2];
+        numberOfElements = 0;
+    }
 
     private class List {
 
