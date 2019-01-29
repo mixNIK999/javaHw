@@ -1,6 +1,6 @@
 # Gradle
-.gradle
-/build/
+**/.gradle
+**/build/
 
 # Ignore Gradle GUI config
 gradle-app.setting
@@ -41,10 +41,10 @@ hs_err_pid*
 
 # IDEA
 # User-specific stuff
-.idea/**/workspace.xml
-.idea/**/tasks.xml
-.idea/**/usage.statistics.xml
+**/.idea/**/workspace.xml
+**/.idea/**/tasks.xml
+**/.idea/**/usage.statistics.xml
 
 # IDEA Gradle
-.idea/**/gradle.xml
-.idea/**/libraries
+**/.idea/**/gradle.xml
+**/.idea/**/libraries
