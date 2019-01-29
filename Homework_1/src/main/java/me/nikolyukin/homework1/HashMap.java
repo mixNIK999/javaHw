@@ -15,7 +15,7 @@ public class HashMap {
 
         public Node get(String key) throws IllegalArgumentException {
             if (key == null) {
-                throw new IllegalArgumentException("arguments are null");
+                throw new IllegalArgumentException("arguments of List.get() are null");
             }
 
             for (Node current = head.next; current != head; current = current.next) {
