@@ -6,12 +6,25 @@ public class HashMap {
         Node head;
         int size;
 
+        public List () {
+            head = new Node();
+            head.next = head;
+            head.prev = head;
+        }
 
 
-
+        public Node get(String key) throws IllegalArgumentException {
+            if (key == null) {
+                throw new IllegalArgumentException("arguments are null");
             }
 
+            for (Node current = head.next; current != head; current = current.next) {
+                if (current.key().equals(key)) {
+                    return current;
+                }
             }
+            return head;
+        }
 
         private class Node {
             public String value;
