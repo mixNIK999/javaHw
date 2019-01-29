@@ -38,6 +38,18 @@ public class HashMap {
             }
         }
 
+        public String remove(String key) throws IllegalArgumentException {
+            if (key == null) {
+                throw new IllegalArgumentException("arguments of List.remove() are null");
+            }
+            var node = get(key);
+            if (node != head) {
+                node.next.prev = node.prev;
+                node.prev.next = node.next;
+                return node.value;
+            }
+            return null;
+        }
 
         public Node get(String key) throws IllegalArgumentException {
             if (key == null) {
