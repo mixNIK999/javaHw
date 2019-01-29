@@ -63,7 +63,7 @@ public class HashMap {
             }
 
             for (Node current = head.next; current != head; current = current.next) {
-                if (current.key().equals(key)) {
+                if (current.key.equals(key)) {
                     return current;
                 }
             }
