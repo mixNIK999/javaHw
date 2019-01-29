@@ -1,23 +1,49 @@
 package me.nikolyukin.homework1;
 
+/**
+ * Хеш-таблица с ключами и значениями типа String.
+ */
+
 public class HashMap {
     private List[] array;
     private int numberOfElements;
     private int defaultSize;
 
+    /**
+     * Создает новую хеш-табицу.
+     *
+     * @param size размер новой хеш-таблицы
+     */
     public HashMap(int size) {
         defaultSize = size;
         array = new List[size];
     }
 
+    /**
+     * Взвращает количество ключей в хеш-таблице.
+     *
+     * @return количество ключей
+     */
     public int size() {
         return numberOfElements;
     }
 
+    /**
+     * Взвращает размер массива хеш-таблицы.
+     *
+     * @return размер внутреннего массива
+     */
     public int getCapacity() {
         return array.length;
     }
 
+    /**
+     * Менят размер внутреннего массива хеш-таблицы
+     *
+     * @param newSize новый размер
+     */
+    public void resize(int newSize) {
+        if (newSize != array.length) {
             var oldArray = array;
             array = new List[newSize];
             numberOfElements = 0;
@@ -40,6 +66,13 @@ public class HashMap {
         return array[index];
     }
 
+    /**
+     * Проверят, есть ли в хеш-таблице данный ключ.
+     *
+     * @param key ключ
+     * @return true, если данный ключ содержится в хеш-таблице
+     * @throws IllegalArgumentException бросается в случае, если передали null как параметр
+     */
     public boolean contains(String key) throws IllegalArgumentException  {
         if (key == null) {
             throw new IllegalArgumentException("arguments of HashMap.contains() are null");
@@ -47,6 +80,13 @@ public class HashMap {
         return findList(key).contains(key);
     }
 
+    /**
+     * Достает из хеш-таблицы значение по ключу.
+     *
+     * @param key ключ
+     * @return значение по ключу, или null, если такого значения нет
+     * @throws IllegalArgumentException бросается в случае, если передали null как параметр
+     */
     public String get(String key) throws IllegalArgumentException {
         if (key == null) {
             throw new IllegalArgumentException("arguments of HashMap.get() are null");
@@ -55,6 +95,14 @@ public class HashMap {
         return findList(key).getNode(key).value;
     }
 
+    /**
+     * Кладет в хеш-таблицу новое значение по ключу.
+     *
+     * @param key ключ
+     * @param value значение
+     * @return значение, которое было заменено или null, если ничего не было
+     * @throws IllegalArgumentException бросается в случае, если передали null как один из параметров
+     */
     public String put(String key, String value) throws IllegalArgumentException {
         if (key == null | value == null) {
             throw new IllegalArgumentException("arguments of HashMap.put() are null");
@@ -67,6 +115,13 @@ public class HashMap {
         return previousValue;
     }
 
+    /**
+     * Удаляет из хеш-таблицы значение по ключу.
+     *
+     * @param key ключ
+     * @return удалённое значение, либо null, если такого значения не было
+     * @throws IllegalArgumentException бросается в случае, если передали null как параметр
+     */
     public String remove(String key) throws IllegalArgumentException {
         if (key == null) {
             throw new IllegalArgumentException("arguments of HashMap.remove() are null");
@@ -79,6 +134,9 @@ public class HashMap {
         return previousValue;
     }
 
+    /**
+     * Очищает хеш-таблицу. Размер приводится к исходному.
+     */
     public void clear() {
         array = new List[defaultSize];
         numberOfElements = 0;
