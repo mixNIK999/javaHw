@@ -12,6 +12,10 @@ public class HashMap {
             head.prev = head;
         }
 
+        public int getSize() {
+            return size;
+        }
+
         private void push(String key, String value) throws IllegalArgumentException {
             if (key == null | value == null) {
                 throw new IllegalArgumentException("arguments of List.push() are null");
@@ -20,6 +24,7 @@ public class HashMap {
             var node = new Node(key, value, head, head.next);
             node.prev.next = node;
             node.next.prev = node;
+            size++;
         }
 
         public String put(String key, String value) throws IllegalArgumentException {
@@ -44,6 +49,7 @@ public class HashMap {
             }
             var node = get(key);
             if (node != head) {
+                size--;
                 node.next.prev = node.prev;
                 node.prev.next = node.next;
                 return node.value;
