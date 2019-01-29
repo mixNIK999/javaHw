@@ -20,15 +20,26 @@ public class HashMap {
         return array[index];
     }
 
-    public boolean contains(String key) {
+    public boolean contains(String key) throws IllegalArgumentException  {
+        if (key == null) {
+            throw new IllegalArgumentException("arguments of HashMap.contains() are null");
+        }
         return findList(key).contains(key);
     }
 
-    public String get(String key) {
+    public String get(String key) throws IllegalArgumentException {
+        if (key == null) {
+            throw new IllegalArgumentException("arguments of HashMap.get() are null");
+        }
+
         return findList(key).getNode(key).value;
     }
 
-    public String put(String key, String value) {
+    public String put(String key, String value) throws IllegalArgumentException {
+        if (key == null | value == null) {
+            throw new IllegalArgumentException("arguments of HashMap.put() are null");
+        }
+
         String previousValue = findList(key).put(key, value);
         if (previousValue == null) {
             numberOfElements++;
@@ -36,7 +47,11 @@ public class HashMap {
         return previousValue;
     }
 
-    public String remove(String key) {
+    public String remove(String key) throws IllegalArgumentException {
+        if (key == null) {
+            throw new IllegalArgumentException("arguments of HashMap.remove() are null");
+        }
+
         String previousValue = findList(key).remove(key);
         if (previousValue != null) {
             numberOfElements--;
