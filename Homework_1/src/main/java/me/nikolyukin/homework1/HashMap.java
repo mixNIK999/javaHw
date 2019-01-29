@@ -5,7 +5,7 @@ public class HashMap {
     private int numberOfElements;
 
     public HashMap(int size) {
-        array = new List[size * 2]
+        array = new List[size * 2];
     }
 
     public int size() {
