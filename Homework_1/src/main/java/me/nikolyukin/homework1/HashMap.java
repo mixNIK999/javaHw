@@ -13,7 +13,11 @@ public class HashMap {
     }
 
     private List findList(String key) {
-        return array[Math.abs(key.hashCode()) % array.length];
+        int index = Math.abs(key.hashCode()) % array.length;
+        if (array[index] == null) {
+            array[index] = new List();
+        }
+        return array[index];
     }
 
     public boolean contains(String key) {
