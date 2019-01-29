@@ -12,7 +12,13 @@ public class HashMap {
         return numberOfElements;
     }
 
-    public boolean contains(String key) {}
+    private List findList(String key) {
+        return array[Math.abs(key.hashCode()) % array.length];
+    }
+
+    public boolean contains(String key) {
+        return findList(key).contains(key);
+    }
 
     public String get(String key) {}
 
