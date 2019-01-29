@@ -160,4 +160,16 @@ class HashMapTest {
         hashMap.clear();
         assertEquals(0, hashMap.size());
     }
+
+    @Test
+    void getCapacityWhen5() {
+        assertEquals(5, hashMap.getCapacity());
+    }
+
+    @Test
+    void resizeWhenCollisions() {
+        smallHashMapWithHugeCollection.resize(100);
+        assertEquals(100, smallHashMapWithHugeCollection.getCapacity());
+        assertEquals('z' - 'a' + 1, smallHashMapWithHugeCollection.size());
+    }
 }
