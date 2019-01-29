@@ -18,10 +18,8 @@ public class HashMap {
         return array.length;
     }
 
-    public void resize(int size) {
-        if (size != array.length) {
             var oldArray = array;
-            array = new List[size];
+            array = new List[newSize];
             numberOfElements = 0;
 
             for (int i = 0; i < oldArray.length; i++) {
