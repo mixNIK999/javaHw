@@ -137,7 +137,7 @@ public class HashMap {
         numberOfElements = 0;
     }
 
-    private class List {
+    private static class List {
 
         private Node head;
         private int size;
@@ -210,7 +210,7 @@ public class HashMap {
             return getNode(key) != head;
         }
 
-        private class Node {
+        private static class Node {
             private String value;
             private String key;
             private Node next;
