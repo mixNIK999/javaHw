@@ -139,16 +139,16 @@ public class HashMap {
 
     private class List {
 
-        Node head;
-        int size;
+        private Node head;
+        private int size;
 
-        public List() {
+        private List() {
             head = new Node();
             head.next = head;
             head.prev = head;
         }
 
-        public int getSize() {
+        private int getSize() {
             return size;
         }
 
@@ -163,7 +163,7 @@ public class HashMap {
             size++;
         }
 
-        public String put(String key, String value) throws IllegalArgumentException {
+        private String put(String key, String value) throws IllegalArgumentException {
             if (key == null | value == null) {
                 throw new IllegalArgumentException("arguments of List.add() are null");
             }
@@ -179,7 +179,7 @@ public class HashMap {
             }
         }
 
-        public String remove(String key) throws IllegalArgumentException {
+        private String remove(String key) throws IllegalArgumentException {
             if (key == null) {
                 throw new IllegalArgumentException("arguments of List.remove() are null");
             }
@@ -193,7 +193,7 @@ public class HashMap {
             return null;
         }
 
-        public Node getNode(String key) throws IllegalArgumentException {
+        private Node getNode(String key) throws IllegalArgumentException {
             if (key == null) {
                 throw new IllegalArgumentException("arguments of List.getNode() are null");
             }
@@ -206,19 +206,19 @@ public class HashMap {
             return head;
         }
 
-        public boolean contains(String key) {
+        private boolean contains(String key) {
             return getNode(key) != head;
         }
 
         private class Node {
-            public String value;
-            public String key;
-            public Node next;
-            public Node prev;
+            private String value;
+            private String key;
+            private Node next;
+            private Node prev;
 
-            public Node() {}
+            private Node() {}
 
-            public Node(String key, String value, Node prev, Node next) {
+            private Node(String key, String value, Node prev, Node next) {
                 this.value = value;
                 this.key = key;
                 this.next = next;
