@@ -101,7 +101,7 @@ public class HashMap {
      * @throws IllegalArgumentException бросается в случае, если передали null как один из параметров
      */
     public String put(String key, String value) throws IllegalArgumentException {
-        if (key == null | value == null) {
+        if (key == null || value == null) {
             throw new IllegalArgumentException("arguments of HashMap.put() are null");
         }
 
