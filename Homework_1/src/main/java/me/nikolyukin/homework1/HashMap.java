@@ -153,7 +153,7 @@ public class HashMap {
         }
 
         private void push(String key, String value) throws IllegalArgumentException {
-            if (key == null | value == null) {
+            if (key == null || value == null) {
                 throw new IllegalArgumentException("arguments of List.push() are null");
             }
 
@@ -164,7 +164,7 @@ public class HashMap {
         }
 
         private String put(String key, String value) throws IllegalArgumentException {
-            if (key == null | value == null) {
+            if (key == null || value == null) {
                 throw new IllegalArgumentException("arguments of List.add() are null");
             }
 
