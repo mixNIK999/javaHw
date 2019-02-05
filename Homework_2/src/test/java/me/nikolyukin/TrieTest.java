@@ -3,6 +3,10 @@ package me.nikolyukin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class TrieTest {
@@ -93,10 +97,22 @@ class TrieTest {
     }
 
     @Test
-    void serialize() {
+    void serializeEmptyDeserializeToFull() throws IOException {
+        var out = new ByteArrayOutputStream(1000);
+        emptyTrie.serialize(out);
+        byte[] data = out.toByteArray();
+        var in = new ByteArrayInputStream(data);
+        heSheHisHers.deserialize(in);
+        assertEquals(0, heSheHisHers.size());
     }
 
     @Test
-    void deserialize() {
+    void serializeFullDeserializeToEmpty() throws IOException {
+        var out = new ByteArrayOutputStream(1000);
+        heSheHisHers.serialize(out);
+        byte[] data = out.toByteArray();
+        var in = new ByteArrayInputStream(data);
+        emptyTrie.deserialize(in);
+        assertEquals(4, emptyTrie.size());
     }
 }
