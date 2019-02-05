@@ -36,7 +36,23 @@ class TrieTest {
     }
 
     @Test
-    void contains() {
+    void containsInEmpty() {
+        assertFalse(emptyTrie.contains(""));
+    }
+
+    @Test
+    void containsInNotEmptyFalse() {
+        assertFalse(heSheHisHers.contains("false"));
+    }
+
+    @Test
+    void containsInNotEmptyTrue1() {
+        assertTrue(heSheHisHers.contains("he"));
+    }
+
+    @Test
+    void containsInNotEmptyTrue2() {
+        assertTrue(heSheHisHers.contains("his"));
     }
 
     @Test
