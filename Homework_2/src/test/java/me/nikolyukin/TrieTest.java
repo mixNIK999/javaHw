@@ -114,5 +114,6 @@ class TrieTest {
         var in = new ByteArrayInputStream(data);
         emptyTrie.deserialize(in);
         assertEquals(4, emptyTrie.size());
+        assertEquals(3, emptyTrie.howManyStartsWithPrefix("h"));
     }
 }
