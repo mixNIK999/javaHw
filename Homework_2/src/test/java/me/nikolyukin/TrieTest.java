@@ -55,8 +55,9 @@ class TrieTest {
 
 
     @Test
-    void containsInNotEmptyTrue2() {
-        assertTrue(heSheHisHers.contains("his"));
+    void containsEmptyStringTrue() {
+        emptyTrie.add("");
+        assertTrue(heSheHisHers.contains(""));
     }
 
     @Test
