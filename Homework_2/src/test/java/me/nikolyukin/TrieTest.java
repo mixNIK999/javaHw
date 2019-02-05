@@ -116,4 +116,10 @@ class TrieTest {
         assertEquals(4, emptyTrie.size());
         assertEquals(3, emptyTrie.howManyStartsWithPrefix("h"));
     }
+
+    @Test
+    void deserializeWithException() throws IOException {
+        var in = new ByteArrayInputStream(new byte[0]);
+        assertThrows(IOException.class, () -> {emptyTrie.deserialize(in);});
+    }
 }
