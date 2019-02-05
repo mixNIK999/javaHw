@@ -1,5 +1,6 @@
 package me.nikolyukin;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,7 +13,8 @@ public class Trie implements MySerializable {
     private Node root = new Node();
 
     @Nullable
-    private Node goToNode(@NotNull String element, bool pushNew) {
+    @Contract("_, true -> !null")
+    private Node goToNode(@NotNull String element, Boolean pushNew) {
         var currentNode = root;
         for (Character c : element) {
             var next = currentNode.children.get(c);
