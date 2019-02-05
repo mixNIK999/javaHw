@@ -118,8 +118,8 @@ class TrieTest {
     }
 
     @Test
-    void deserializeWithException() throws IOException {
+    void deserializeWithException() {
         var in = new ByteArrayInputStream(new byte[0]);
-        assertThrows(IOException.class, () -> {emptyTrie.deserialize(in);});
+        assertThrows(IOException.class, () -> emptyTrie.deserialize(in));
     }
 }

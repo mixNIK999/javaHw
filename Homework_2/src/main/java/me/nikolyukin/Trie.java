@@ -124,7 +124,8 @@ public class Trie implements MySerializable {
         return lastNode.suffixCount;
     }
 
-    private void dfsSerialize (@NotNull ObjectOutputStream objectOut, @NotNull Node currentNode) throws IOException {
+    private void dfsSerialize (@NotNull ObjectOutputStream objectOut,
+                @NotNull Node currentNode) throws IOException {
         objectOut.writeInt(currentNode.childrenCount());
         objectOut.writeBoolean(currentNode.isTerminal);
         for (var entry : currentNode.children.entrySet()) {
@@ -143,7 +144,8 @@ public class Trie implements MySerializable {
         }
     }
 
-    private void dfsDeserialize (@NotNull ObjectInputStream objectIn, @NotNull Node currentNode) throws IOException {
+    private void dfsDeserialize (@NotNull ObjectInputStream objectIn,
+            @NotNull Node currentNode) throws IOException {
         int n = objectIn.readInt();
         currentNode.isTerminal = objectIn.readBoolean();
         currentNode.suffixCount = (currentNode.isTerminal) ? 1: 0;
