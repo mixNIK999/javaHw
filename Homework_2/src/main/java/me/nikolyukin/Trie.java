@@ -1,5 +1,8 @@
 package me.nikolyukin;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -7,6 +10,23 @@ import java.util.LinkedHashMap;
 
 public class Trie implements MySerializable {
     private Node root = new Node();
+
+    @Nullable
+    private Node goToNode(@NotNull String element, bool pushNew) {
+        var currentNode = root;
+        for (Character c : element) {
+            var next = currentNode.children.get(c);
+            if (next == null) {
+                if (!pushNew) {
+                    return null;
+                }
+                next = new Node(currentNode, c);
+                currentNode.cihldren.put(c, next);
+            }
+            currentNode = next;
+        }
+        return currentNode;
+    }
 
     public boolean add(String element) {
 
