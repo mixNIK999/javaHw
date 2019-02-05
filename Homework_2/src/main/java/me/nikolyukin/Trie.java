@@ -56,6 +56,7 @@ public class Trie implements MySerializable {
 
         lastNode.isTerminal = false;
         lastNode.suffixCount--;
+        var lastChar = lastNode.parentCharacter;
         while(lastNode != null) {
             lastNode.parent.suffixCount--;
             if (lastNode.suffixCount == 0) {
@@ -92,14 +93,14 @@ public class Trie implements MySerializable {
         private LinkedHashMap<Character, Node>  children
                 = new  LinkedHashMap<Character, Node>();
         private Node parent;
-        private Character parantCharacter;
+        private Character parentCharacter;
         private int suffixCount = 0;
         private boolean isTerminal = false;
 
         private Node() {}
         private Node(Node parent, Character parentCharacter) {
             this.parent = parent;
-            this.parantCharacter = parentCharacter;
+            this.parentCharacter = parentCharacter;
         }
 
         private int childrenCount() {
