@@ -73,7 +73,7 @@ public class Trie implements MySerializable {
         return root.suffixCount;
     }
 
-    public int howManyStartsWithPrefix(String prefix) {
+    public int howManyStartsWithPrefix(@NotNull String prefix) {
         var lastNode = goToNode(prefix, false);
         if (lastNode == null) {
             return 0;
