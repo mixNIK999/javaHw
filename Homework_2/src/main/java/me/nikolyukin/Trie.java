@@ -57,18 +57,16 @@ public class Trie implements MySerializable {
         lastNode.isTerminal = false;
         lastNode.suffixCount--;
         var lastChar = lastNode.parentCharacter;
+        lastNode = lastNode.parent;
         while(lastNode != null) {
-            lastNode.parent.suffixCount--;
-            if (lastNode.suffixCount == 0) {
-                lastNode.suffixCount
-            }
-            lastNode = lastNode.parent;
-        }
-
-        while (lastNode != null) {
             lastNode.suffixCount--;
+            if (lastNode.children.get(lastChar).suffixCount == 0) {
+                lastNode.children.remove(lastChar);
+            }
+            lastChar = lastNode.parentCharacter;
             lastNode = lastNode.parent;
         }
+        return true;
     }
 
     public int size() {
