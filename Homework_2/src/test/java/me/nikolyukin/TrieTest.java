@@ -56,7 +56,24 @@ class TrieTest {
     }
 
     @Test
-    void remove() {
+    void removeFromEmpty() {
+        assertFalse(emptyTrie.remove(""));
+    }
+
+    @Test
+    void removeFromNotEmptyFalse() {
+        assertFalse(heSheHisHers.remove("hi"));
+    }
+
+    @Test
+    void removeFromNotEmptyTrue() {
+        assertTrue(heSheHisHers.remove("he"));
+    }
+
+    @Test
+    void removeFromNotEmptyMinusSize() {
+        heSheHisHers.remove("his");
+        assertEquals(3, heSheHisHers.size());
     }
 
     @Test
