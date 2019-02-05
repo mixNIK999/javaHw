@@ -111,7 +111,7 @@ public class Trie implements MySerializable {
             char childChar = objectIn.readChar();
             Node nextNode = new Trie(currentNode).goToNode(Character.toString(childChar), true);
             dfsDeserialize(objectIn, nextNode);
-            currentNode.suffixCount += (nextNode.isTerminal) ? 1 : 0;
+            currentNode.suffixCount += nextNode.suffixCount;
         }
     }
 
