@@ -8,10 +8,17 @@ import java.io.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ *
+ * Бор - структура данных для хранения набора строк.
+ *
+ */
 public class Trie implements MySerializable {
     private Node root = new Node();
 
-
+    /**
+     * Конструктор пустого бора.
+     */
     public Trie() {}
 
     private Trie(Node root) {
@@ -36,6 +43,12 @@ public class Trie implements MySerializable {
         return currentNode;
     }
 
+    /**
+     * Добавляет строку в бор, работает за O(|element|).
+     *
+     * @param element новая строка бора
+     * @return true, если такой строки ещё не было
+     */
     public boolean add(@NotNull String element) {
         var lastNode = goToNode(element, true);
         if (lastNode.isTerminal) {
@@ -49,11 +62,23 @@ public class Trie implements MySerializable {
         return true;
     }
 
+    /**
+     * Проверяет, есть ли строка в боре, работает за O(|element|).
+     *
+     * @param element искомая строка
+     * @return true, если такая строка содержится в боре
+     */
     public boolean contains(@NotNull String element) {
         var lastNode = goToNode(element, false);
         return (lastNode != null && lastNode.isTerminal);
     }
 
+    /**
+     * Удаляет строку из бора, работает за O(|element|).
+     *
+     * @param element удаляемая строка
+     * @return true, если элемент был в дереве
+     */
     public boolean remove(@NotNull String element) {
         var lastNode = goToNode(element, false);
         if (lastNode == null || !lastNode.isTerminal) {
@@ -75,10 +100,22 @@ public class Trie implements MySerializable {
         return true;
     }
 
+    /**
+     * Узнает количество строк в боре, работает за O(1).
+     *
+     * @return количество строк.
+     */
     public int size() {
         return root.suffixCount;
     }
 
+    /**
+     *
+     * Узнает количество строк с данным префиксом, работает за O(|prefix|).
+     *
+     * @param prefix префикс
+     * @return количество строк, начинающиеся с данного префикса.
+     */
     public int howManyStartsWithPrefix(@NotNull String prefix) {
         var lastNode = goToNode(prefix, false);
         if (lastNode == null) {
@@ -96,6 +133,9 @@ public class Trie implements MySerializable {
         }
     }
 
+    /**
+     * {@link MySerializable#serialize(OutputStream)}
+     */
     @Override
     public void serialize(@NotNull OutputStream out) throws IOException {
         try (var objectOut = new ObjectOutputStream(new BufferedOutputStream(out))){
@@ -115,6 +155,9 @@ public class Trie implements MySerializable {
         }
     }
 
+    /**
+     * {@link MySerializable#deserialize(InputStream)}
+     */
     @Override
     public void deserialize(@NotNull InputStream in) throws IOException {
         root = new Node();
