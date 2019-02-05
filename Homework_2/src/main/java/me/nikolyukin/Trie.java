@@ -48,8 +48,26 @@ public class Trie implements MySerializable {
         return (lastNode != null && lastNode.isTerminal);
     }
 
-    public boolean remove(String element) {
+    public boolean remove(@NotNull String element) {
+        var lastNode = goToNode(element, false);
+        if (lastNode == null || !lastNode.isTerminal) {
+            return false;
+        }
 
+        lastNode.isTerminal = false;
+        lastNode.suffixCount--;
+        while(lastNode != null) {
+            lastNode.parent.suffixCount--;
+            if (lastNode.suffixCount == 0) {
+                lastNode.suffixCount
+            }
+            lastNode = lastNode.parent;
+        }
+
+        while (lastNode != null) {
+            lastNode.suffixCount--;
+            lastNode = lastNode.parent;
+        }
     }
 
     public int size() {
