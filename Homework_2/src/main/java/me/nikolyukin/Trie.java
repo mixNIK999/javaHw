@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Trie implements MySerializable {
     private Node root = new Node();
@@ -92,7 +93,7 @@ public class Trie implements MySerializable {
     }
 
     private static class Node {
-        private LinkedHashMap<Character, Node>  children
+        private Map<Character, Node> children
                 = new  LinkedHashMap<Character, Node>();
         private Node parent;
         private Character parentCharacter;
