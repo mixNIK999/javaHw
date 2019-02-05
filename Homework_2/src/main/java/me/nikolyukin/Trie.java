@@ -4,9 +4,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -89,9 +87,20 @@ public class Trie implements MySerializable {
         return lastNode.suffixCount;
     }
 
-    @Override
-    public void serialize(OutputStream out) throws IOException {
+    private void dfsSerialize (@NotNull ObjectOutputStream objectOut, @NotNull Node currentNode) throws IOException {
+        objectOut.writeObject(currentNode.childrenCount());
+        objectOut.writeObject(currentNode.isTerminal);
+        for (var entry : currentNode.children.entrySet()) {
+            objectOut.writeObject(entry.getKey());
+            dfsSerialize(objectOut, entry.getValue());
+        }
+    }
 
+    @Override
+    public void serialize(@NotNull OutputStream out) throws IOException {
+        try (ObjectOutputStream objectOut = new ObjectOutputStream(new BufferedOutputStream(out))){
+            dfsSerialize(objectOut, root);
+        }
     }
 
     @Override
