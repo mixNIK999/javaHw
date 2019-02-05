@@ -125,7 +125,7 @@ public class Trie implements MySerializable {
 
     private static class Node {
         private Map<Character, Node> children
-                = new  LinkedHashMap<Character, Node>();
+                = new  LinkedHashMap<>();
         private Node parent;
         private Character parentCharacter;
         private int suffixCount = 0;
