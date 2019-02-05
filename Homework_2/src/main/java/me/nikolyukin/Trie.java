@@ -88,8 +88,8 @@ public class Trie implements MySerializable {
     }
 
     private void dfsSerialize (@NotNull ObjectOutputStream objectOut, @NotNull Node currentNode) throws IOException {
-        objectOut.writeObject(currentNode.childrenCount());
-        objectOut.writeObject(currentNode.isTerminal);
+        objectOut.writeInt(currentNode.childrenCount());
+        objectOut.writeBoolean(currentNode.isTerminal);
         for (var entry : currentNode.children.entrySet()) {
             objectOut.writeObject(entry.getKey());
             dfsSerialize(objectOut, entry.getValue());
@@ -103,9 +103,24 @@ public class Trie implements MySerializable {
         }
     }
 
-    @Override
-    public void deserialize(InputStream in) throws IOException {
+    private void dfsDeserialize (@NotNull ObjectInputStream objectIn, @NotNull Node currentNode) throws IOException {
+        int n = objectIn.readInt();
+        currentNode.isTerminal = objectIn.readBoolean();
+        currentNode.suffixCount = (currentNode.isTerminal) ? 1: 0;
+        for (int i = 0; i < n; i++) {
+            char childChar = objectIn.readChar();
+            Node nextNode = new Trie(currentNode).goToNode(Character.toString(childChar), true);
+            dfsDeserialize(objectIn, nextNode);
+            currentNode.suffixCount += (nextNode.isTerminal) ? 1 : 0;
+        }
+    }
 
+    @Override
+    public void deserialize(@NotNull InputStream in) throws IOException {
+        root = new Node();
+        try (var objectIn = new ObjectInputStream(new BufferedInputStream(in))){
+            dfsDeserialize(objectIn, root);
+        }
     }
 
     private static class Node {
