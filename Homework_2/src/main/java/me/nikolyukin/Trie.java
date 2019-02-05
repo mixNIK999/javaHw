@@ -7,24 +7,24 @@ import java.util.LinkedHashMap;
 
 public class Trie implements MySerializable {
     private Node root = Node();
-    
-    boolean add(String element) {
+
+    public boolean add(String element) {
 
     }
 
-    boolean contains(String element) {
+    public boolean contains(String element) {
 
     }
 
-    boolean remove(String element) {
+    public boolean remove(String element) {
 
     }
 
-    int size() {
+    public int size() {
         return root.suffixCount;
     }
 
-    int howManyStartsWithPrefix(String prefix) {
+    public int howManyStartsWithPrefix(String prefix) {
 
     }
 
