@@ -6,7 +6,8 @@ import java.io.OutputStream;
 import java.util.LinkedHashMap;
 
 public class Trie implements MySerializable {
-
+    private Node root = Node();
+    
     boolean add(String element) {
 
     }
@@ -20,7 +21,7 @@ public class Trie implements MySerializable {
     }
 
     int size() {
-
+        return root.suffixCount;
     }
 
     int howManyStartsWithPrefix(String prefix) {
