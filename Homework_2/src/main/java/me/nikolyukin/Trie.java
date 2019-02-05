@@ -23,19 +23,29 @@ public class Trie implements MySerializable {
                     return null;
                 }
                 next = new Node(currentNode, c);
-                currentNode.cihldren.put(c, next);
+                currentNode.children.put(c, next);
             }
             currentNode = next;
         }
         return currentNode;
     }
 
-    public boolean add(String element) {
-
+    public boolean add(@NotNull String element) {
+        var lastNode = goToNode(element, true);
+        if (lastNode.isTerminal) {
+            return false;
+        }
+        lastNode.isTerminal = true;
+        while(lastNode != null) {
+            lastNode.suffixCount++;
+            lastNode = lastNode.parent;
+        }
+        return true;
     }
 
-    public boolean contains(String element) {
-
+    public boolean contains(@NotNull String element) {
+        var lastNode = goToNode(element, false);
+        return (lastNode != null && lastNode.isTerminal);
     }
 
     public boolean remove(String element) {
