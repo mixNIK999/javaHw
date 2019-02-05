@@ -98,7 +98,7 @@ public class Trie implements MySerializable {
 
     @Override
     public void serialize(@NotNull OutputStream out) throws IOException {
-        try (ObjectOutputStream objectOut = new ObjectOutputStream(new BufferedOutputStream(out))){
+        try (var objectOut = new ObjectOutputStream(new BufferedOutputStream(out))){
             dfsSerialize(objectOut, root);
         }
     }
