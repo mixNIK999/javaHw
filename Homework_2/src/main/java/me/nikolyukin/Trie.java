@@ -13,6 +13,13 @@ import java.util.Map;
 public class Trie implements MySerializable {
     private Node root = new Node();
 
+
+    public Trie() {}
+
+    private Trie(Node root) {
+        this.root = root;
+    }
+
     @Nullable
     @Contract("_, true -> !null")
     private Node goToNode(@NotNull String element, boolean pushNew) {
