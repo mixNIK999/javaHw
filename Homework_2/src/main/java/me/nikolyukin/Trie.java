@@ -91,7 +91,7 @@ public class Trie implements MySerializable {
         objectOut.writeInt(currentNode.childrenCount());
         objectOut.writeBoolean(currentNode.isTerminal);
         for (var entry : currentNode.children.entrySet()) {
-            objectOut.writeObject(entry.getKey());
+            objectOut.writeChar(entry.getKey());
             dfsSerialize(objectOut, entry.getValue());
         }
     }
