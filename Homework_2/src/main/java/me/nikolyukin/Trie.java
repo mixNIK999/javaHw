@@ -47,7 +47,10 @@ public class Trie implements MySerializable {
             this.parent = parent;
             this.parantCharacter = parentCharacter;
         }
-        
+
+        private int childrenCount() {
+            return children.size();
+        }
     }
 }
 
