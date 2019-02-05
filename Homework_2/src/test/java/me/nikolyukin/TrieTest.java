@@ -77,7 +77,13 @@ class TrieTest {
     }
 
     @Test
-    void howManyStartsWithPrefix() {
+    void howManyStartsWithPrefixFromEmpty() {
+        assertEquals(0, emptyTrie.howManyStartsWithPrefix(""));
+    }
+
+    @Test
+    void howManyStartsWithPrefixFromNotEmpty() {
+        assertEquals(3, heSheHisHers.howManyStartsWithPrefix("h"));
     }
 
     @Test
