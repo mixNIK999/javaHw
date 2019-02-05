@@ -16,7 +16,7 @@ public class Trie implements MySerializable {
     @Contract("_, true -> !null")
     private Node goToNode(@NotNull String element, boolean pushNew) {
         var currentNode = root;
-        for (Character c : element) {
+        for (Character c : element.toCharArray()) {
             var next = currentNode.children.get(c);
             if (next == null) {
                 if (!pushNew) {
