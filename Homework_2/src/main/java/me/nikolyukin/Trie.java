@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import java.util.LinkedHashMap;
 
 public class Trie implements MySerializable {
-    private Node root = Node();
+    private Node root = new Node();
 
     public boolean add(String element) {
 
