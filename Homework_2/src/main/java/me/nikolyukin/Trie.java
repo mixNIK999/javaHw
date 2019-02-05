@@ -38,9 +38,12 @@ public class Trie implements MySerializable {
     }
 
     private static class Node {
-        private LinkedHashMap<Character, Node> children;
+        private LinkedHashMap<Character, Node>  children
+                = new  LinkedHashMap<Character, Node>();
         private Node parent;
         private Character parantCharacter;
+        private int suffixCount = 0;
+        private bool isTerminal = false;
 
         private Node() {}
         private Node(Node parent, Character parentCharacter) {
