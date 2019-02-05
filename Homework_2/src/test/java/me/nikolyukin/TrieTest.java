@@ -25,13 +25,14 @@ class TrieTest {
     }
 
     @Test
-    void add1ToEmpty() {
-        emptyTrie.add("a");
+    void add1ToEmptyTrue() {
+        assertTrue(emptyTrie.add("a"));
         assertEquals(1, emptyTrie.size());
     }
 
     @Test
-    void add4ToEmpty() {
+    void addToNotEmptyFalse() {
+        assertFalse(heSheHisHers.add("he"));
         assertEquals(4, heSheHisHers.size());
     }
 
