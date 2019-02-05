@@ -14,7 +14,7 @@ public class Trie implements MySerializable {
 
     @Nullable
     @Contract("_, true -> !null")
-    private Node goToNode(@NotNull String element, Boolean pushNew) {
+    private Node goToNode(@NotNull String element, boolean pushNew) {
         var currentNode = root;
         for (Character c : element) {
             var next = currentNode.children.get(c);
@@ -66,7 +66,7 @@ public class Trie implements MySerializable {
         private Node parent;
         private Character parantCharacter;
         private int suffixCount = 0;
-        private bool isTerminal = false;
+        private boolean isTerminal = false;
 
         private Node() {}
         private Node(Node parent, Character parentCharacter) {
