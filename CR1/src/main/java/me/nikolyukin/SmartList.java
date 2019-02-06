@@ -1,10 +1,14 @@
 package me.nikolyukin;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.sql.Array;
 import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class SmartList<E> extends AbstractList<E> {
-    private int listSize = 0;
+    private int size = 0;
     private Object container;
 
 //    private void resize(int newSize) {
@@ -25,7 +29,7 @@ public class SmartList<E> extends AbstractList<E> {
     }
 
     public int size() {
-        return listSize;
+        return size;
     }
 
     public E set​(int index, E element) {
@@ -42,5 +46,24 @@ public class SmartList<E> extends AbstractList<E> {
         return prev;
     }
 
+    public boolean add​(@NotNull E e) {
+        if (size == 0) {
+            container = e;
+        } else if (size == 1) {
+            var newContainer = new E[5];
+            var prev = (E)container;
+            container = newContainer;
+            ((E[])container)[0] = prev;
+            ((E[])container)[1] = e;
+        } else if (size <= 4){
+            ((E[])container)[size] = e;
+        } else {
+            if (size == 5) {
+                container = new ArrayList<>(Arrays.asList((E[]) container));
+            }
+            ((ArrayList<E>)container).add(e);
+        }
+        return true;
+    }
 
 }
