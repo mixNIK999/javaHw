@@ -10,10 +10,7 @@ import java.util.Arrays;
 public class SmartList<E> extends AbstractList<E> {
     private int size = 0;
     private Object container;
-
-//    private void resize(int newSize) {
-//
-//    }
+    
 
     public E get(int index) {
         if (index < 0 || index >= size) {
@@ -32,7 +29,7 @@ public class SmartList<E> extends AbstractList<E> {
         return size;
     }
 
-    public E set​(int index, E element) {
+    public E set​(int index,@NotNull E element) {
         E prev;
         if (size == 1) {
             prev = (E)container;
@@ -50,7 +47,7 @@ public class SmartList<E> extends AbstractList<E> {
         if (size == 0) {
             container = e;
         } else if (size == 1) {
-            var newContainer = new E[5];
+            var newContainer = new Object[5];
             var prev = (E)container;
             container = newContainer;
             ((E[])container)[0] = prev;
