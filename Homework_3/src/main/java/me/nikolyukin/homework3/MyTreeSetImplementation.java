@@ -65,9 +65,10 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
     /**
      * {@link TreeSet#descendingIterator()}
      **/
+    @NotNull
     @Override
     public Iterator<E> descendingIterator() {
-        return null;
+        return new descendingIterator<>(root);
     }
 
     /**
@@ -75,7 +76,8 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
      **/
     @Override
     public MyTreeSet<E> descendingSet() {
-        return null;
+        root.needToReverse = !root.needToReverse;
+        return this;
     }
 
     /**
@@ -83,6 +85,10 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
      **/
     @Override
     public E first() {
+        var begin = iterator()
+        if (begin.hasNext()) {
+            return begin.next();
+        }
         return null;
     }
 
@@ -91,6 +97,10 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
      **/
     @Override
     public E last() {
+        var end = descendingIterator();
+        if (end.hasNext()) {
+            return end.next();
+        }
         return null;
     }
 
@@ -99,7 +109,14 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
      **/
     @Override
     public E lower(E e) {
-        return null;
+        var currentNode = lowerBoundNode(e);
+        if (currentNode == root) {
+            return null;
+        }
+        if (comparator.compare(currentNode.value, e) == 0) {
+            currentNode = currentNode.goPrev();
+        }
+        return currentNode.value;
     }
 
     /**
@@ -107,7 +124,7 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
      **/
     @Override
     public E floor(E e) {
-        return null;
+        return lowerBoundNode(e).value;
     }
 
     /**
@@ -115,7 +132,14 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
      **/
     @Override
     public E ceiling(E e) {
-        return null;
+        var currentNode = lowerBoundNode(e);
+        if (currentNode == root) {
+            return null;
+        }
+        if (comparator.compare(currentNode.value, e) != 0) {
+            currentNode = currentNode.goNext();
+        }
+        return currentNode.value;
     }
 
     /**
@@ -123,9 +147,10 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
      **/
     @Override
     public E higher(E e) {
-        return null;
+        return lowerBoundNode(e).goNext().value;
     }
 
+    @NotNull
     private Node<E> lowerBoundNode(E element) {
         var currentNode = root;
         var nextNode = root.leftChild;
@@ -214,7 +239,7 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
         }
 
         private descendingIterator() {
-            return descendingIterator(root);
+            this(root);
         }
 
         private descendingIterator(Node<E> nextElement) {
