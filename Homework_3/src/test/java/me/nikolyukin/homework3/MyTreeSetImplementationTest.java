@@ -14,16 +14,18 @@ class MyTreeSetImplementationTest {
         emptyTreeSet = new MyTreeSetImplementation<>();
         TreeSet532 = new MyTreeSetImplementation<>(Comparator.reverseOrder());
         TreeSet532.add(2);
-//        TreeSet532.add(5);
-//        TreeSet532.add(3);
+        TreeSet532.add(5);
+        TreeSet532.add(3);
     }
-    @Test
-    void iteratorHasNextTrue() {
-//        assertTrue(TreeSet532.iterator().hasNext());
-    }
+
     @Test
     void iteratorHasNextFalse() {
         assertFalse(emptyTreeSet.iterator().hasNext());
+    }
+
+    @Test
+    void iteratorHasNextTrue() {
+        assertTrue(TreeSet532.iterator().hasNext());
     }
 
     @Test
