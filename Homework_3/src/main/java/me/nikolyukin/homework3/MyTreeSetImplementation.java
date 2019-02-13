@@ -1,12 +1,23 @@
 package me.nikolyukin.homework3;
 
 import java.util.AbstractSet;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.TreeSet;
 
-public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTreeSet<E> {
-    Node<E> root;
-    
+public class MyTreeSetImplementation<E extends > extends AbstractSet<E> implements MyTreeSet<E> {
+    int size = 0;
+    Node<E> root = new Node<>();
+    private Comparator<? super E> comparator;
+
+    public MyTreeSetImplementation() {
+        this(null);
+    }
+
+    public MyTreeSetImplementation(Comparator<? super E> comparator) {
+        this.comparator = comparator;
+    }
+
     /**
      * Returns an iterator over the elements contained in this collection.
      *
@@ -19,7 +30,7 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     /**
