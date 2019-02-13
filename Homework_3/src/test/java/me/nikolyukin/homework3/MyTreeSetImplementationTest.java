@@ -29,7 +29,21 @@ class MyTreeSetImplementationTest {
     }
 
     @Test
-    void size() {
+    void iteratorNext532() {
+        var iterator = TreeSet532.iterator();
+        assertEquals(Integer.valueOf(5), iterator.next());
+        assertEquals(Integer.valueOf(3), iterator.next());
+        assertEquals(Integer.valueOf(2), iterator.next());
+    }
+
+    @Test
+    void sizeEmpty() {
+        assertEquals(0, emptyTreeSet.size());
+    }
+
+    @Test
+    void sizeNotEmpty() {
+        assertEquals(3, TreeSet532.size());
     }
 
     @Test
