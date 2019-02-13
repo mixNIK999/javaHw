@@ -81,7 +81,13 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
     @NotNull
     @Override
     public Iterator<E> descendingIterator() {
-        return new descendingIterator<>(root);
+        var currentNode = root;
+        currentNode.push();
+        while(currentNode.rightChild != null) {
+            currentNode = currentNode.rightChild;
+            currentNode.push();
+        }
+        return new descendingIterator<>(currentNode);
     }
 
     /**

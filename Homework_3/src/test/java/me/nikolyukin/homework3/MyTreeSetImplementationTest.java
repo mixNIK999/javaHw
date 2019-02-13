@@ -59,9 +59,23 @@ class MyTreeSetImplementationTest {
     }
 
     @Test
-    void descendingIterator() {
+    void descendingIteratorHasNextFalse() {
+        assertFalse(emptyTreeSet.descendingIterator().hasNext());
     }
 
+    @Test
+    void descendingIteratorHasNextTrue() {
+        assertTrue(TreeSet532.descendingIterator().hasNext());
+    }
+
+    @Test
+    void descendingIteratorNext532() {
+        var descendingIterator = TreeSet532.descendingIterator();
+        assertEquals(Integer.valueOf(2), descendingIterator.next());
+        assertEquals(Integer.valueOf(3), descendingIterator.next());
+        assertEquals(Integer.valueOf(5), descendingIterator.next());
+    }
+    
     @Test
     void descendingSet() {
     }
