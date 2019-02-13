@@ -62,7 +62,7 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
     @Override
     public boolean add(E e) {
         var lowerNode = lowerBoundNode(e);
-        if (comparator.compare(e, lowerNode.value) == 0) {
+        if (Comparator.nullsFirst(comparator).compare(e, lowerNode.value) == 0) {
             return false;
         }
         lowerNode.leftChild = new Node<>(e, lowerNode);
@@ -175,7 +175,7 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
                 nextNode = currentNode.leftChild;
             }
         }
-        return (comparator.compare(element, currentNode.value) >= 0) ? currentNode
+        return (Comparator.nullsLast(comparator).compare(element, currentNode.value) >= 0) ? currentNode
             : currentNode.goPrev();
     }
 
