@@ -105,6 +105,9 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
         private Node<E> LeftChild;
         private Node<E> RightChild;
         private E value;
+        private boolean needToReverse = false;
+
+        private Node() {}
 
         private Node(E value) {
             this.value = value;
