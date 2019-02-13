@@ -7,15 +7,26 @@ import java.util.NoSuchElementException;
 import java.util.TreeSet;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Контейней для хранения данных с использованием бинарного дерева
+ * @param <E> тип данных. Обязан быть задан любо Comparator, либо natural ordering.
+ */
 public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTreeSet<E> {
     private int size = 0;
     private Node<E> root = new Node<>();
     private Comparator<? super E> comparator;
 
+    /**
+     * Контсруктор по умолчанию, использует natural ordering
+     */
     public MyTreeSetImplementation() {
         this(null);
     }
 
+    /**
+     * Конструктор с использованием comparator.
+     * @param comparator для E
+     */
     public MyTreeSetImplementation(Comparator<? super E> comparator) {
         this.comparator = comparator;
     }
