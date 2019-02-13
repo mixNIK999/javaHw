@@ -47,7 +47,15 @@ class MyTreeSetImplementationTest {
     }
 
     @Test
-    void add() {
+    void addTrue() {
+        assertTrue(TreeSet532.add(8));
+        assertEquals(4,TreeSet532.size());
+    }
+
+    @Test
+    void addFalse() {
+        assertFalse(TreeSet532.add(5));
+        assertEquals(3,TreeSet532.size());
     }
 
     @Test
