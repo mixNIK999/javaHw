@@ -78,6 +78,10 @@ class MyTreeSetImplementationTest {
     
     @Test
     void descendingSet() {
+        var iterator = TreeSet532.descendingSet().iterator();
+        assertEquals(Integer.valueOf(2), iterator.next());
+        assertEquals(Integer.valueOf(3), iterator.next());
+        assertEquals(Integer.valueOf(5), iterator.next());
     }
 
     @Test

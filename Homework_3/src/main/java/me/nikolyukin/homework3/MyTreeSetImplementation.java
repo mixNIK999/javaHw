@@ -95,7 +95,8 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
      **/
     @Override
     public MyTreeSet<E> descendingSet() {
-        root.needToReverse = !root.needToReverse;
+        root.rightChild.needToReverse = !root.rightChild.needToReverse;
+        comparator = comparator.reversed();
         return this;
     }
 
@@ -279,8 +280,10 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
             var currentNode = this;
             if (currentNode.rightChild != null) {
                 currentNode = currentNode.rightChild;
+                currentNode.push();
                 while(currentNode.leftChild != null) {
                     currentNode = currentNode.leftChild;
+                    currentNode.push();
                 }
                 return currentNode;
             }
@@ -289,6 +292,7 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
                     return currentNode.parent;
                 }
                 currentNode = currentNode.parent;
+                currentNode.push();
             }
             return currentNode;
         }
@@ -298,8 +302,10 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
             var currentNode = this;
             if (currentNode.leftChild != null) {
                 currentNode = currentNode.leftChild;
+                currentNode.push();
                 while(currentNode.rightChild != null) {
                     currentNode = currentNode.rightChild;
+                    currentNode.push();
                 }
                 return currentNode;
             }
@@ -308,6 +314,7 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
                     return currentNode.parent;
                 }
                 currentNode = currentNode.parent;
+                currentNode.push();
             }
             return currentNode;
         }
@@ -318,6 +325,7 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
                 leftChild =  rightChild;
                 rightChild = tmp;
                 needToReverse = false;
+
                 if (leftChild != null) {
                     leftChild.needToReverse = !leftChild.needToReverse;
                 }
