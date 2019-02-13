@@ -114,7 +114,7 @@ public class MyTreeSetImplementation<E extends > extends AbstractSet<E> implemen
         return null;
     }
 
-    private static class TreeIterator<E> implements ListIterator<E> {
+    private class TreeIterator<E> implements ListIterator<E> {
         Node<E> nextElement;
 
         /**
@@ -159,7 +159,7 @@ public class MyTreeSetImplementation<E extends > extends AbstractSet<E> implemen
          */
         @Override
         public boolean hasPrevious() {
-            return false;
+            return nextElement.goPrev() != root;
         }
 
         /**
