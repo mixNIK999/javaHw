@@ -25,9 +25,14 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
      * @return an iterator over the elements contained in this collection
      */
     @Override
-    public Iterator iterator() {
-        var currentNode
-        return null;
+    public TreeIterator<E> iterator() {
+        var currentNode = root;
+        currentNode.push();
+        while(currentNode.leftChild != null) {
+            currentNode = currentNode.leftChild;
+            currentNode.push();
+        }
+        return new TreeIterator<>(currentNode);
     }
 
     @Override
@@ -221,32 +226,40 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
 
         private Node<E> goNext() {
             push();
-            var currentElement = this;
-            if (currentElement.rightChild != null) {
-                return currentElement.rightChild;
-            }
-            while(currentElement.parent != null) {
-                if (currentElement.parent.leftChild == currentElement) {
-                    return currentElement.parent;
+            var currentNode = this;
+            if (currentNode.rightChild != null) {
+                currentNode = currentNode.rightChild;
+                while(currentNode.leftChild != null) {
+                    currentNode = currentNode.leftChild;
                 }
-                currentElement = currentElement.parent;
+                return currentNode;
             }
-            return currentElement;
+            while(currentNode.parent != null) {
+                if (currentNode.parent.leftChild == currentNode) {
+                    return currentNode.parent;
+                }
+                currentNode = currentNode.parent;
+            }
+            return currentNode;
         }
 
         private Node<E> goPrev() {
             push();
-            var currentElement = this;
-            if (currentElement.leftChild != null) {
-                return currentElement.leftChild;
-            }
-            while(currentElement.parent != null) {
-                if (currentElement.parent.rightChild == currentElement) {
-                    return currentElement.parent;
+            var currentNode = this;
+            if (currentNode.leftChild != null) {
+                currentNode = currentNode.leftChild;
+                while(currentNode.rightChild != null) {
+                    currentNode = currentNode.rightChild;
                 }
-                currentElement = currentElement.parent;
+                return currentNode;
             }
-            return currentElement;
+            while(currentNode.parent != null) {
+                if (currentNode.parent.rightChild == currentNode) {
+                    return currentNode.parent;
+                }
+                currentNode = currentNode.parent;
+            }
+            return currentNode;
         }
 
         private void push() {
