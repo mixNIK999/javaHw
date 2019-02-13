@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import java.util.TreeSet;
-import org.jetbrains.annotations.NotNull;
 
 public class MyTreeSetImplementation<E extends > extends AbstractSet<E> implements MyTreeSet<E> {
     int size = 0;
@@ -115,8 +114,8 @@ public class MyTreeSetImplementation<E extends > extends AbstractSet<E> implemen
         return null;
     }
 
-    private static class TreeIterator<E> extends ListIterator<E> {
-        Node<E> next;
+    private static class TreeIterator<E> implements ListIterator<E> {
+        Node<E> nextElement;
 
         /**
          * Returns {@code true} if this list iterator has more elements when traversing the list in
@@ -128,7 +127,7 @@ public class MyTreeSetImplementation<E extends > extends AbstractSet<E> implemen
          */
         @Override
         public boolean hasNext() {
-            return next.value != null;
+            return nextElement.value != null;
         }
 
         /**
@@ -145,9 +144,9 @@ public class MyTreeSetImplementation<E extends > extends AbstractSet<E> implemen
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
-            var value = next.value;
-
-            return null;
+            var value = nextElement.value;
+            nextElement = nextElement.goNext();
+            return value;
         }
 
         /**
@@ -263,34 +262,6 @@ public class MyTreeSetImplementation<E extends > extends AbstractSet<E> implemen
         public void add(E e) {
 
         }
-
-        private static Node goNext(@NotNull Node element) {
-            element.push();
-            if (element.rightChild != null) {
-                return element.rightChild;
-            }
-            while(element.parent != null) {
-                if (element.parent.leftChild == element) {
-                    return element.parent;
-                }
-                element = element.parent;
-            }
-            return element;
-        }
-
-        private static Node goPrev(@NotNull Node element) {
-            element.push();
-            if (element.leftChild != null) {
-                return element.leftChild;
-            }
-            while(element.parent != null) {
-                if (element.parent.rightChild == element) {
-                    return element.parent;
-                }
-                element = element.parent;
-            }
-            return element;
-        }
     }
 
     private static class Node<E> {
@@ -305,6 +276,36 @@ public class MyTreeSetImplementation<E extends > extends AbstractSet<E> implemen
         private Node(E value, Node parent) {
             this.value = value;
             this.parent = parent;
+        }
+
+        private Node<E> goNext() {
+            push();
+            var currentElement = this;
+            if (currentElement.rightChild != null) {
+                return currentElement.rightChild;
+            }
+            while(currentElement.parent != null) {
+                if (currentElement.parent.leftChild == currentElement) {
+                    return currentElement.parent;
+                }
+                currentElement = currentElement.parent;
+            }
+            return currentElement;
+        }
+
+        private Node<E> goPrev() {
+            push();
+            var currentElement = this;
+            if (currentElement.leftChild != null) {
+                return currentElement.leftChild;
+            }
+            while(currentElement.parent != null) {
+                if (currentElement.parent.rightChild == currentElement) {
+                    return currentElement.parent;
+                }
+                currentElement = currentElement.parent;
+            }
+            return currentElement;
         }
 
         private void push() {
