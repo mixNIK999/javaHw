@@ -113,8 +113,9 @@ public class MyTreeSetImplementation<E extends > extends AbstractSet<E> implemen
     }
 
     private static class Node<E> {
-        private Node<E> LeftChild;
-        private Node<E> RightChild;
+        private Node<E> leftChild;
+        private Node<E> rightChild;
+        private Node<E> parent;
         private E value;
         private boolean needToReverse = false;
 
