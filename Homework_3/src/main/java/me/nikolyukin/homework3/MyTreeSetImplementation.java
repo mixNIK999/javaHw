@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.TreeSet;
+import org.jetbrains.annotations.NotNull;
 
 public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTreeSet<E> {
     int size = 0;
@@ -24,6 +25,7 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
      *
      * @return an iterator over the elements contained in this collection
      */
+    @NotNull
     @Override
     public TreeIterator<E> iterator() {
         var currentNode = root;
@@ -52,7 +54,12 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
      */
     @Override
     public boolean add(E e) {
-        return super.add(e);
+        var lowerNode = lowerBoundNode(e);
+        if (comparator.compare(e, lowerNode.value) == 0) {
+            return false;
+        }
+        lowerNode.leftChild = new Node<>(e, lowerNode);
+        return true;
     }
 
     /**
@@ -122,8 +129,10 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
     private Node<E> lowerBoundNode(E element) {
         var currentNode = root;
         var nextNode = root.leftChild;
+        currentNode.push();
         while (nextNode != null) {
             currentNode = nextNode;
+            currentNode.push();
             int compareRes = comparator.compare(element, currentNode.value);
             if (compareRes > 0) {
                 nextNode = currentNode.rightChild;
@@ -141,12 +150,10 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
         Node<E> nextElement;
 
         /**
-         * Returns {@code true} if this list iterator has more elements when traversing the list in
-         * the forward direction. (In other words, returns {@code true} if {@link #next} would
-         * return an element rather than throwing an exception.)
+         * Returns {@code true} if the iteration has more elements. (In other words, returns {@code
+         * true} if {@link #next} would return an element rather than throwing an exception.)
          *
-         * @return {@code true} if the list iterator has more elements when traversing the list in
-         * the forward direction
+         * @return {@code true} if the iteration has more elements
          */
         @Override
         public boolean hasNext() {
@@ -154,13 +161,10 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
         }
 
         /**
-         * Returns the next element in the list and advances the cursor position. This method may be
-         * called repeatedly to iterate through the list, or intermixed with calls to {@link
-         * #previous} to go back and forth. (Note that alternating calls to {@code next} and {@code
-         * previous} will return the same element repeatedly.)
+         * Returns the next element in the iteration.
          *
-         * @return the next element in the list
-         * @throws NoSuchElementException if the iteration has no next element
+         * @return the next element in the iteration
+         * @throws NoSuchElementException if the iteration has no more elements
          */
         @Override
         public E next() {
@@ -172,40 +176,48 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
             return value;
         }
 
+        private TreeIterator() {
+            this(root);
+        }
+
+        private TreeIterator(Node<E> nextElement) {
+            this.nextElement = nextElement;
+        }
+    }
+
+    private class descendingIterator<E> implements Iterator<E> {
+        Node<E> nextElement;
         /**
-         * Returns {@code true} if this list iterator has more elements when traversing the list in
-         * the reverse direction.  (In other words, returns {@code true} if {@link #previous} would
-         * return an element rather than throwing an exception.)
+         * Returns {@code true} if the iteration has more elements. (In other words, returns {@code
+         * true} if {@link #next} would return an element rather than throwing an exception.)
          *
-         * @return {@code true} if the list iterator has more elements when traversing the list in
-         * the reverse direction
+         * @return {@code true} if the iteration has more elements
          */
-        public boolean hasPrevious() {
+        @Override
+        public boolean hasNext() {
             return nextElement.goPrev() != root;
         }
 
         /**
-         * Returns the previous element in the list and moves the cursor position backwards.  This
-         * method may be called repeatedly to iterate through the list backwards, or intermixed with
-         * calls to {@link #next} to go back and forth.  (Note that alternating calls to {@code
-         * next} and {@code previous} will return the same element repeatedly.)
+         * Returns the next element in the iteration.
          *
-         * @return the previous element in the list
-         * @throws NoSuchElementException if the iteration has no previous element
+         * @return the next element in the iteration
+         * @throws NoSuchElementException if the iteration has no more elements
          */
-        public E previous() {
-            if (!hasPrevious()) {
+        @Override
+        public E next() {
+            if (!hasNext()) {
                 throw new NoSuchElementException();
             }
             nextElement = nextElement.goPrev();
             return nextElement.value;
         }
 
-        private TreeIterator() {
-            this.nextElement = root;
+        private descendingIterator() {
+            return descendingIterator(root);
         }
 
-        private TreeIterator(Node<E> nextElement) {
+        private descendingIterator(Node<E> nextElement) {
             this.nextElement = nextElement;
         }
     }
