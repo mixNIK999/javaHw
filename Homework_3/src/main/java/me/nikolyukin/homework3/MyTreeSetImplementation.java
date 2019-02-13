@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import java.util.TreeSet;
+import org.jetbrains.annotations.NotNull;
 
 public class MyTreeSetImplementation<E extends > extends AbstractSet<E> implements MyTreeSet<E> {
     int size = 0;
@@ -263,7 +264,8 @@ public class MyTreeSetImplementation<E extends > extends AbstractSet<E> implemen
 
         }
 
-        private static Node goNext(Node element) {
+        private static Node goNext(@NotNull Node element) {
+            element.push();
             if (element.rightChild != null) {
                 return element.rightChild;
             }
@@ -276,7 +278,8 @@ public class MyTreeSetImplementation<E extends > extends AbstractSet<E> implemen
             return element;
         }
 
-        private static Node goPrev(Node element) {
+        private static Node goPrev(@NotNull Node element) {
+            element.push();
             if (element.leftChild != null) {
                 return element.leftChild;
             }
@@ -302,6 +305,21 @@ public class MyTreeSetImplementation<E extends > extends AbstractSet<E> implemen
         private Node(E value, Node parent) {
             this.value = value;
             this.parent = parent;
+        }
+
+        private void push() {
+            if (needToReverse) {
+                var tmp = leftChild;
+                leftChild =  rightChild;
+                rightChild = tmp;
+                needToReverse = false;
+                if (leftChild != null) {
+                    leftChild.needToReverse = !leftChild.needToReverse;
+                }
+                if (rightChild != null) {
+                    rightChild.needToReverse = !rightChild.needToReverse;
+                }
+            }
         }
     }
 
