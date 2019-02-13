@@ -145,7 +145,7 @@ public class MyTreeSetImplementation<E extends > extends AbstractSet<E> implemen
                 throw new NoSuchElementException();
             }
             var value = next.value;
-            next
+
             return null;
         }
 
@@ -262,6 +262,32 @@ public class MyTreeSetImplementation<E extends > extends AbstractSet<E> implemen
         public void add(E e) {
 
         }
+
+        private static Node goNext(Node element) {
+            if (element.rightChild != null) {
+                return element.rightChild;
+            }
+            while(element.parent != null) {
+                if (element.parent.leftChild == element) {
+                    return element.parent;
+                }
+                element = element.parent;
+            }
+            return element;
+        }
+
+        private static Node goPrev(Node element) {
+            if (element.leftChild != null) {
+                return element.leftChild;
+            }
+            while(element.parent != null) {
+                if (element.parent.rightChild == element) {
+                    return element.parent;
+                }
+                element = element.parent;
+            }
+            return element;
+        }
     }
 
     private static class Node<E> {
@@ -273,8 +299,9 @@ public class MyTreeSetImplementation<E extends > extends AbstractSet<E> implemen
 
         private Node() {}
 
-        private Node(E value) {
+        private Node(E value, Node parent) {
             this.value = value;
+            this.parent = parent;
         }
     }
 
