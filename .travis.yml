@@ -1,13 +1,16 @@
 language: java
 
 jdk:
-- oraclejdk11
+  - oraclejdk11
 
 os:
-- linux
-
+  - linux
 env:
-- PROJECT_DIR=Homework_1
-# - PROJECT_DIR=Homework_2
-# - PROJECT_DIR=Homework_3
+  - PROJECT_DIR=Homework_1
+#  - PROJECT_DIR=Homework_2
+ # - PROJECT_DIR=Homework_3
+
+before_install:
+  - chmod +x gradlew
+
 script: cd $PROJECT_DIR && ./gradlew check
