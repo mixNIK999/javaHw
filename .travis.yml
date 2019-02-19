@@ -1,6 +1,11 @@
 language: java
+
+jdk:
+- oraclejdk11
+
 os:
 - linux
+
 env:
 - PROJECT_DIR=Homework_1
 # - PROJECT_DIR=Homework_2
