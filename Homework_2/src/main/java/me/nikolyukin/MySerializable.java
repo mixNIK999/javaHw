@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ *  Объекты классов, реализующих MySerializable, можно записать и считать из потока.
+ */
 public interface MySerializable {
     /**
      * Выводит объект в поток.

@@ -55,7 +55,7 @@ public class Trie implements MySerializable {
             return false;
         }
         lastNode.isTerminal = true;
-        while(lastNode != null) {
+        while (lastNode != null) {
             lastNode.suffixCount++;
             lastNode = lastNode.parent;
         }
@@ -89,7 +89,7 @@ public class Trie implements MySerializable {
         lastNode.suffixCount--;
         var lastChar = lastNode.parentCharacter;
         lastNode = lastNode.parent;
-        while(lastNode != null) {
+        while (lastNode != null) {
             lastNode.suffixCount--;
             if (lastNode.children.get(lastChar).suffixCount == 0) {
                 lastNode.children.remove(lastChar);
