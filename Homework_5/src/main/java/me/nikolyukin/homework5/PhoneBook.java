@@ -31,11 +31,12 @@ public class PhoneBook implements AutoCloseable{
     }
 
     public void add(@NotNull String name, @NotNull String number) throws SQLException {
-        final String sql = "INSERT INTO phoneBook(name,capacity) VALUES(?,?)";
+        final String sql = "INSERT INTO phoneBook(name,number) VALUES(?,?)";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, name);
             pstmt.setString(2, number);
+            pstmt.executeUpdate();
         }
 
     }
