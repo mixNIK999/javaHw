@@ -41,12 +41,34 @@ public class PhoneBook implements AutoCloseable{
 
     }
 
-    public ArrayList<String> findNames(@NotNull String number) {
-        return null;
+    public ArrayList<String> findNames(@NotNull String number) throws SQLException {
+        final String sql = "SELECT name, number FROM phoneBook WHERE number = ?";
+        var result = new ArrayList<String>();
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, number);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    result.add(rs.getString("name"));
+                }
+            }
+        }
+        return result;
     }
 
-    public ArrayList<String> findNubers(@NotNull String name) {
-        return null;
+    public ArrayList<String> findNumbers(@NotNull String name) throws SQLException {
+        final String sql = "SELECT name, number FROM phoneBook WHERE name = ?";
+        var result = new ArrayList<String>();
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, name);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    result.add(rs.getString("number"));
+                }
+            }
+        }
+        return result;
     }
 
     public void delete(@NotNull String name, @NotNull String number) {}
@@ -67,7 +89,6 @@ public class PhoneBook implements AutoCloseable{
                 }
             }
         }
-
         return result;
     }
 
