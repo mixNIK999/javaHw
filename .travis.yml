@@ -1,0 +1,11 @@
+language: java
+
+jdk:
+  - oraclejdk11
+
+os:
+  - linux
+env:
+  - PROJECT_DIR=Homework_n
+
+script: cd $PROJECT_DIR && bash gradlew check
