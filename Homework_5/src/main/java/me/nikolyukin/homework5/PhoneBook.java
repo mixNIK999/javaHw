@@ -80,9 +80,31 @@ public class PhoneBook implements AutoCloseable{
         }
     }
 
-    public void changeNumber(@NotNull String name, @NotNull String number) {}
+    public void changeNumber(@NotNull String name,
+            @NotNull String number,
+            @NotNull String newNumber) throws SQLException {
 
-    public void changeName(@NotNull String name, @NotNull String number) {}
+        final String sql = "UPDATE phoneBook SET number = ? WHERE name = ? AND number = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, newNumber);
+            pstmt.setString(2, name);
+            pstmt.setString(3, number);
+            pstmt.executeUpdate();
+        }
+    }
+
+    public void changeName(@NotNull String name,
+        @NotNull String number,
+        @NotNull String newName) throws SQLException {
+
+        final String sql = "UPDATE phoneBook SET name = ? WHERE name = ? AND number = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, newName);
+            pstmt.setString(2, name);
+            pstmt.setString(3, number);
+            pstmt.executeUpdate();
+        }
+    }
 
     public List<Pair<String, String>> getAll() throws SQLException {
         final String sql = "SELECT name, number FROM phoneBook";

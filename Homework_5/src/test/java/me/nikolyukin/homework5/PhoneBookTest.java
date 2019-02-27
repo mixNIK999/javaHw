@@ -96,10 +96,18 @@ class PhoneBookTest {
     }
 
     @Test
-    void changeNumber() {
+    void changeNumberFromFull() throws SQLException {
+        fullPhoneBook.changeNumber("foo", "1", "3");
+        var fullList = fullPhoneBook.getAll();
+        assertTrue(fullList.contains(new Pair<>("foo", "3")));
+        assertFalse(fullList.contains(new Pair<>("foo", "1")));
     }
 
     @Test
-    void changeName() {
+    void changeName() throws SQLException {
+        fullPhoneBook.changeName("baz", "3", "foo");
+        var fullList = fullPhoneBook.getAll();
+        assertTrue(fullList.contains(new Pair<>("foo", "3")));
+        assertFalse(fullList.contains(new Pair<>("baz", "3")));
     }
 }
