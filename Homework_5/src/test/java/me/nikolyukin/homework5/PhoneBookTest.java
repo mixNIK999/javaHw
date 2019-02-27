@@ -86,7 +86,13 @@ class PhoneBookTest {
     }
 
     @Test
-    void delete() {
+    void deleteFromFull() throws SQLException {
+        fullPhoneBook.delete("foo", "1");
+        assertEquals(5, fullPhoneBook.getAll().size());
+        fullPhoneBook.delete("foo", "2");
+        assertEquals(4, fullPhoneBook.getAll().size());
+        fullPhoneBook.delete("bar", "2");
+        assertEquals(3, fullPhoneBook.getAll().size());
     }
 
     @Test

@@ -71,7 +71,14 @@ public class PhoneBook implements AutoCloseable{
         return result;
     }
 
-    public void delete(@NotNull String name, @NotNull String number) {}
+    public void delete(@NotNull String name, @NotNull String number) throws SQLException {
+        final String sql = "DELETE FROM phoneBook WHERE name = ? AND number = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, name);
+            pstmt.setString(2, number);
+            pstmt.executeUpdate();
+        }
+    }
 
     public void changeNumber(@NotNull String name, @NotNull String number) {}
 
