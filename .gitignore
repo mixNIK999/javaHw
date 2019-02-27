@@ -44,7 +44,10 @@ hs_err_pid*
 **/.idea/**/workspace.xml
 **/.idea/**/tasks.xml
 **/.idea/**/usage.statistics.xml
+**/out/
 
 # IDEA Gradle
 **/.idea/**/gradle.xml
 **/.idea/**/libraries
+
+Homework_5/phoneBook\.db
