@@ -13,12 +13,64 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Класс предоставляет статические методы для записи (printStructure) и сравнения структуры классов (diffClasses).
+ */
 public class Reflector {
 
+    /**
+     * Метод создаёт файл с именем someClass.java.
+     * В нём описан класс SomeClass со всеми полями, методами, внутренними и вложенными классами и интерфейсами.
+     * Методы без реализации.
+     * Модификаторы такие же, как в переданном классе.
+     * Объявления полей, методов и вложенных классов сохраняет генериковость.
+     *
+     * @param someClass класс, структуру которого мы записываем. NotNull
+     * @throws IOException если произошла ошибка при работе с файлом *someClass*.java
+     */
     public static void printStructure(@NotNull Class<?> someClass) throws IOException {
         try (var out = new BufferedWriter(new FileWriter(someClass.getSimpleName() + ".java"))) {
             printStructure(someClass, out);
         }
+    }
+
+    /**
+     * Метод возвращает все поля и методы, различающиеся в двух классах в форме:<br>
+     * Unique fields in a:<br>
+     * *описание полей a без аналогичных в b по одному в строке*<br>
+     *<br>
+     * Unique fields in b:<br>
+     * *описание полей b без аналогичных в b по одному в строке*<br>
+     *<br>
+     * Unique methods in a:<br>
+     * *описание методов a без аналогичных в b по одному в строке*<br>
+     *<br>
+     * Unique methods in b:<br>
+     * *описание методов b без аналогичных в a по одному в строке*<br>
+     *
+     * @param a первый класс который мы сравниваем
+     * @param b второй класс который мы сравниваем
+     * @return отличия в формате описанном выше
+     */
+    @NotNull
+    public static String diffClasses(@NotNull Class<?> a, @NotNull Class<?> b) {
+        var diffBuilder = new StringBuilder();
+
+        var aFields = getAllFields(a);
+        var bFields = getAllFields(b);
+        var aMethods = getAllMethods(a);
+        var bMethods = getAllMethods(b);
+
+        diffBuilder.append("Unique fields in a:\n");
+        appendDifference(diffBuilder, aFields, bFields);
+        diffBuilder.append("\nUnique fields in b:\n");
+        appendDifference(diffBuilder, bFields, aFields);
+        diffBuilder.append("\nUnique methods in a:\n");
+        appendDifference(diffBuilder, aMethods, bMethods);
+        diffBuilder.append("\nUnique methods in b:\n");
+        appendDifference(diffBuilder, bMethods, aMethods);
+
+        return diffBuilder.toString();
     }
 
     private static void printStructure(@NotNull Class<?> someClass, @NotNull BufferedWriter out)
@@ -183,27 +235,6 @@ public class Reflector {
         fieldBuilder.append(someField.getGenericType().getTypeName()).append(" ");
         fieldBuilder.append(someField.getName()).append(";");
         return fieldBuilder.toString();
-    }
-
-    @NotNull
-    public static String diffClasses(@NotNull Class<?> a, @NotNull Class<?> b) {
-        var diffBuilder = new StringBuilder();
-
-        var aFields = getAllFields(a);
-        var bFields = getAllFields(b);
-        var aMethods = getAllMethods(a);
-        var bMethods = getAllMethods(b);
-
-        diffBuilder.append("Unique fields in a:\n");
-        appendDifference(diffBuilder, aFields, bFields);
-        diffBuilder.append("\nUnique fields in b:\n");
-        appendDifference(diffBuilder, bFields, aFields);
-        diffBuilder.append("\nUnique methods in a:\n");
-        appendDifference(diffBuilder, aMethods, bMethods);
-        diffBuilder.append("\nUnique methods in b:\n");
-        appendDifference(diffBuilder, bMethods, aMethods);
-
-        return diffBuilder.toString();
     }
 
     private static void appendDifference(@NotNull StringBuilder builder, @NotNull HashSet<String> a,
