@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 public class Reflector {
 
     public static void printStructure(@NotNull Class<?> someClass) throws IOException {
-        try (var out = new BufferedWriter(new FileWriter(someClass.getName() + ".java"))) {
+        try (var out = new BufferedWriter(new FileWriter(someClass.getSimpleName() + ".java"))) {
             printStructure(someClass, out);
         }
     }
@@ -39,17 +39,26 @@ public class Reflector {
         for (Method someMethod : someClass.getDeclaredMethods()) {
             out.write(methodToString(someMethod) + "\n");
         }
+        out.write("\n");
+
+        for (Class classIn : someClass.getDeclaredClasses()) {
+            printStructure(classIn, out);
+            out.write("\n");
+        }
         out.write("}");
     }
 
     @NotNull
     private static String declarationToString(@NotNull Class<?> someClass) {
+//        return someClass.toGenericString();
         StringBuilder declarationBuilder = new StringBuilder();
         var mods = modifiersToString(someClass.getModifiers());
         if (mods.length() != 0) {
             declarationBuilder.append(mods).append(" ");
         }
-        declarationBuilder.append("class ");
+        if (!someClass.isInterface()) {
+            declarationBuilder.append("class ");
+        }
         declarationBuilder.append(someClass.getSimpleName());
 
         appendTypeParameters(declarationBuilder, someClass.getTypeParameters());
@@ -136,7 +145,7 @@ public class Reflector {
         }
         appendTypeParameters(methodBuilder, someConstructor.getTypeParameters());
         methodBuilder.append(" ");
-        methodBuilder.append(someConstructor.getName());
+        methodBuilder.append(someConstructor.getDeclaringClass().getSimpleName());
         appendParameters(methodBuilder, someConstructor.getGenericParameterTypes());
         methodBuilder.append(" ");
         appendThrows(methodBuilder, someConstructor.getGenericExceptionTypes());

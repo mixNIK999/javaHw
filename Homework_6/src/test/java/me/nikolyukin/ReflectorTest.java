@@ -12,6 +12,7 @@ class ReflectorTest {
     void printStructure() throws IOException {
         Reflector.printStructure(TestGenericClass.class);
         Reflector.printStructure(ArrayList.class);
+        Reflector.printStructure(AutoCloseable.class);
     }
 
     @Test
