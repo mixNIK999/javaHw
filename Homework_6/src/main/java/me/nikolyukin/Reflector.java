@@ -3,6 +3,7 @@ package me.nikolyukin;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -29,6 +30,12 @@ public class Reflector {
             out.write(fieldToString(someField) + "\n");
         }
         out.write("\n");
+
+        for(Constructor someConstructor: someClass.getDeclaredConstructors()) {
+            out.write(constructorToString(someConstructor) + "\n");
+        }
+        out.write("\n");
+
         for (Method someMethod : someClass.getDeclaredMethods()) {
             out.write(methodToString(someMethod) + "\n");
         }
@@ -103,7 +110,6 @@ public class Reflector {
 
     @NotNull
     private static String methodToString(@NotNull Method someMethod) {
-//        return someMethod.toGenericString();
         StringBuilder methodBuilder = new StringBuilder();
         var mods = modifiersToString(someMethod.getModifiers());
         if (mods.length() != 0) {
@@ -117,6 +123,24 @@ public class Reflector {
         methodBuilder.append(" ");
         appendThrows(methodBuilder, someMethod.getGenericExceptionTypes());
         methodBuilder.append(" {throw new Error();}");
+
+        return methodBuilder.toString();
+    }
+
+    @NotNull
+    private static String constructorToString(@NotNull Constructor someConstructor) {
+        StringBuilder methodBuilder = new StringBuilder();
+        var mods = modifiersToString(someConstructor.getModifiers());
+        if (mods.length() != 0) {
+            methodBuilder.append(mods).append(" ");
+        }
+        appendTypeParameters(methodBuilder, someConstructor.getTypeParameters());
+        methodBuilder.append(" ");
+        methodBuilder.append(someConstructor.getName());
+        appendParameters(methodBuilder, someConstructor.getGenericParameterTypes());
+        methodBuilder.append(" ");
+        appendThrows(methodBuilder, someConstructor.getGenericExceptionTypes());
+        methodBuilder.append(" {}");
 
         return methodBuilder.toString();
     }
