@@ -10,6 +10,7 @@ class ReflectorTest {
 
     @Test
     void printStructure() throws IOException {
+        Reflector.printStructure(TestGenericClass.class);
         Reflector.printStructure(ArrayList.class);
     }
 

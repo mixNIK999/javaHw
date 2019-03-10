@@ -1,52 +1,100 @@
 package me.nikolyukin;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.TypeVariable;
 import org.jetbrains.annotations.NotNull;
 
 public class Reflector {
 
     public static void printStructure(@NotNull Class<?> someClass) throws IOException {
-        try (var out = new BufferedWriter(new FileWriter(someClass.getSimpleName() + ".java"))) {
+        try (var out = new BufferedWriter(new FileWriter(someClass.getName() + ".java"))) {
             printStructure(someClass, out);
         }
     }
 
-    public static void printStructure(@NotNull Class<?> someClass, BufferedWriter out) throws IOException {
-        int mods = someClass.getModifiers();
-        if (Modifier.isPublic(mods)) {
-            out.write("public ");
-        }
-        if (Modifier.isStatic(mods)) {
-            out.write("static ");
-        }
-        if (Modifier.isFinal(mods)) {
-            out.write("final ");
-        }
-        out.write("class " + someClass.getSimpleName() + " ");
+    private static void printStructure(@NotNull Class<?> someClass, @NotNull BufferedWriter out)
+        throws IOException {
 
+        out.write(declarationToString(someClass));
+
+        out.write("{\n");
+
+        for (Field someField : someClass.getDeclaredFields()) {
+            out.write(fieldToString(someField) + "\n");
+        }
+
+        for (Method someMethod : someClass.getDeclaredMethods()) {
+            out.write(methodToString(someMethod) + "\n");
+        }
+        out.write("}");
+    }
+
+    @NotNull
+    private static String declarationToString(@NotNull Class<?> someClass) {
+        StringBuilder declaration = new StringBuilder();
+        declaration.append(modifiersToString(someClass.getModifiers())).append(" ");
+        declaration.append(someClass.getSimpleName());
+
+        TypeVariable<?>[] parameters = someClass.getTypeParameters();
+        if (parameters.length != 0) {
+            declaration.append("<");
+            boolean isFirst = true;
+            for (var param : parameters) {
+                if (!isFirst) {
+                    declaration.append(",");
+                }
+                declaration.append(param.getTypeName());
+                isFirst = false;
+            }
+            declaration.append("> ");
+        }
         var superClass = someClass.getSuperclass();
         if (superClass != null) {
-            out.write("extends " + superClass.getName() + " ");
+            declaration.append("extends ").append(superClass.getName()).append(" ");
         }
 
         var interfaces = someClass.getInterfaces();
         if (interfaces.length != 0) {
-            out.write("implements ");
-            for (var implementedInterface : interfaces) {
-                out.write(implementedInterface.getName() + " ");
+            declaration.append("implements ");
+            for (var someInterface : interfaces) {
+                declaration.append(someInterface.getName()).append(" ");
             }
         }
-        out.write("{");
-
-        out.write("}");
+        return declaration.toString();
     }
 
-//    private static void ()
+    private static String methodToString(@NotNull Method someMethod) {
+        return someMethod.toGenericString();
+    }
+
+    private static String modifiersToString(int mods) {
+        return Modifier.toString(mods);
+//        if (Modifier.isPublic(mods)) {
+//            out.write("public ");
+//        }
+//        if (Modifier.isProtected(mods)) {
+//            out.write("protected ");
+//        }
+//        if (Modifier.isPrivate(mods)) {
+//            out.write("private ");
+//        }
+//        if (Modifier.isStatic(mods)) {
+//            out.write("static ");
+//        }
+    }
+
+    @NotNull
+    private static String fieldToString(@NotNull Field someField) {
+//        someField.setAccessible(true);
+//        printModifiers(someField.getModifiers(), out);
+//        out.write(someField.getType().getName() + " ");
+        return someField.toGenericString();
+    }
 
     public static void diffClasses(Class<?> a, Class<?> b) {}
 
