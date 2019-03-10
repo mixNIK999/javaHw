@@ -17,5 +17,7 @@ class ReflectorTest {
 
     @Test
     void diffClasses() {
+        System.out.println(Reflector.diffClasses(ArrayList.class, TestGenericClass.class));
+        System.out.println(Reflector.diffClasses(ArrayList.class, ArrayList.class));
     }
 }

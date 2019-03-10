@@ -9,6 +9,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import org.jetbrains.annotations.NotNull;
 
 public class Reflector {
@@ -183,6 +185,50 @@ public class Reflector {
         return fieldBuilder.toString();
     }
 
-    public static void diffClasses(Class<?> a, Class<?> b) {}
+    @NotNull
+    public static String diffClasses(@NotNull Class<?> a, @NotNull Class<?> b) {
+        var diffBuilder = new StringBuilder();
+
+        var aFields = getAllFields(a);
+        var bFields = getAllFields(b);
+        var aMethods = getAllMethods(a);
+        var bMethods = getAllMethods(b);
+
+        diffBuilder.append("Unique fields in a:\n");
+        appendDifference(diffBuilder, aFields, bFields);
+        diffBuilder.append("\nUnique fields in b:\n");
+        appendDifference(diffBuilder, bFields, aFields);
+        diffBuilder.append("\nUnique methods in a:\n");
+        appendDifference(diffBuilder, aMethods, bMethods);
+        diffBuilder.append("\nUnique methods in b:\n");
+        appendDifference(diffBuilder, bMethods, aMethods);
+
+        return diffBuilder.toString();
+    }
+
+    private static void appendDifference(@NotNull StringBuilder builder, @NotNull HashSet<String> a,
+        @NotNull HashSet<String> b) {
+        for (var str : a) {
+            if (!b.contains(str)) {
+                builder.append(str).append("\n");
+            }
+        }
+    }
+
+    private static HashSet<String> getAllFields(@NotNull Class<?> someClass) {
+        var fields = new HashSet<String>();
+        for (Field someField : someClass.getDeclaredFields()) {
+            fields.add(fieldToString(someField));
+        }
+        return fields;
+    }
+
+    private static HashSet<String> getAllMethods(@NotNull Class<?> someClass) {
+        var methods = new LinkedHashSet<String>();
+        for (Method someMethod : someClass.getDeclaredMethods()) {
+            methods.add(methodToString(someMethod));
+        }
+        return methods;
+    }
 
 }
