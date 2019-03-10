@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import org.jetbrains.annotations.NotNull;
 
@@ -41,21 +42,12 @@ public class Reflector {
         if (mods.length() != 0) {
             declarationBuilder.append(mods).append(" ");
         }
+        declarationBuilder.append("class ");
         declarationBuilder.append(someClass.getSimpleName());
 
-        TypeVariable<?>[] parameters = someClass.getTypeParameters();
-        if (parameters.length != 0) {
-            declarationBuilder.append("<");
-            boolean isFirst = true;
-            for (var param : parameters) {
-                if (!isFirst) {
-                    declarationBuilder.append(",");
-                }
-                declarationBuilder.append(param.getTypeName());
-                isFirst = false;
-            }
-            declarationBuilder.append("> ");
-        }
+        appendTypeParameters(declarationBuilder, someClass.getTypeParameters());
+        declarationBuilder.append(" ");
+
         var superClass = someClass.getSuperclass();
         if (superClass != null) {
             declarationBuilder.append("extends ").append(superClass.getName()).append(" ");
@@ -71,10 +63,65 @@ public class Reflector {
         return declarationBuilder.toString();
     }
 
-    private static String methodToString(@NotNull Method someMethod) {
-        return someMethod.toGenericString();
+    private static void appendTypeParameters(@NotNull StringBuilder builder, @NotNull TypeVariable<?>[] typeParameters) {
+        if (typeParameters.length != 0) {
+            builder.append("<");
+            boolean isFirst = true;
+            for (var param : typeParameters) {
+                if (!isFirst) {
+                    builder.append(",");
+                }
+                builder.append(param.getTypeName());
+                isFirst = false;
+            }
+            builder.append(">");
+        }
     }
 
+    private static void appendParameters(@NotNull StringBuilder builder, @NotNull Type[] typeParameters) {
+        builder.append("(");
+        for (int i = 0; i < typeParameters.length; i++) {
+            if (i != 0) {
+                builder.append(", ");
+            }
+            builder.append(typeParameters[i].getTypeName()).append(" v").append(i);
+        }
+        builder.append(")");
+    }
+
+    private static void appendThrows(@NotNull StringBuilder builder, @NotNull Type[] typeParameters) {
+        if (typeParameters.length != 0) {
+            builder.append("throws ");
+            for (int i = 0; i < typeParameters.length; i++) {
+                if (i != 0) {
+                    builder.append(", ");
+                }
+                builder.append(typeParameters[i].getTypeName());
+            }
+        }
+    }
+
+    @NotNull
+    private static String methodToString(@NotNull Method someMethod) {
+//        return someMethod.toGenericString();
+        StringBuilder methodBuilder = new StringBuilder();
+        var mods = modifiersToString(someMethod.getModifiers());
+        if (mods.length() != 0) {
+            methodBuilder.append(mods).append(" ");
+        }
+        appendTypeParameters(methodBuilder, someMethod.getTypeParameters());
+        methodBuilder.append(" ");
+        methodBuilder.append(someMethod.getGenericReturnType()).append(" ");
+        methodBuilder.append(someMethod.getName());
+        appendParameters(methodBuilder, someMethod.getGenericParameterTypes());
+        methodBuilder.append(" ");
+        appendThrows(methodBuilder, someMethod.getGenericExceptionTypes());
+        methodBuilder.append(" {throw new Error();}");
+
+        return methodBuilder.toString();
+    }
+
+    @NotNull
     private static String modifiersToString(int mods) {
         return Modifier.toString(mods);
 //        if (Modifier.isPublic(mods)) {
@@ -93,17 +140,13 @@ public class Reflector {
 
     @NotNull
     private static String fieldToString(@NotNull Field someField) {
-//        someField.setAccessible(true);
-//        printModifiers(someField.getModifiers(), out);
-//        out.write(someField.getType().getName() + " ");
-//        return someField.toGenericString();
         StringBuilder fieldBuilder = new StringBuilder();
         var mods = modifiersToString(someField.getModifiers());
         if (mods.length() != 0) {
             fieldBuilder.append(modifiersToString(someField.getModifiers())).append(" ");
         }
         fieldBuilder.append(someField.getGenericType().getTypeName()).append(" ");
-        fieldBuilder.append(someField.getName());
+        fieldBuilder.append(someField.getName()).append(";");
         return fieldBuilder.toString();
     }
 
