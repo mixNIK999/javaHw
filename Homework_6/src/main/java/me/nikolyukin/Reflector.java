@@ -36,36 +36,36 @@ public class Reflector {
 
     @NotNull
     private static String declarationToString(@NotNull Class<?> someClass) {
-        StringBuilder declaration = new StringBuilder();
-        declaration.append(modifiersToString(someClass.getModifiers())).append(" ");
-        declaration.append(someClass.getSimpleName());
+        StringBuilder declarationBuilder = new StringBuilder();
+        declarationBuilder.append(modifiersToString(someClass.getModifiers())).append(" ");
+        declarationBuilder.append(someClass.getSimpleName());
 
         TypeVariable<?>[] parameters = someClass.getTypeParameters();
         if (parameters.length != 0) {
-            declaration.append("<");
+            declarationBuilder.append("<");
             boolean isFirst = true;
             for (var param : parameters) {
                 if (!isFirst) {
-                    declaration.append(",");
+                    declarationBuilder.append(",");
                 }
-                declaration.append(param.getTypeName());
+                declarationBuilder.append(param.getTypeName());
                 isFirst = false;
             }
-            declaration.append("> ");
+            declarationBuilder.append("> ");
         }
         var superClass = someClass.getSuperclass();
         if (superClass != null) {
-            declaration.append("extends ").append(superClass.getName()).append(" ");
+            declarationBuilder.append("extends ").append(superClass.getName()).append(" ");
         }
 
         var interfaces = someClass.getInterfaces();
         if (interfaces.length != 0) {
-            declaration.append("implements ");
+            declarationBuilder.append("implements ");
             for (var someInterface : interfaces) {
-                declaration.append(someInterface.getName()).append(" ");
+                declarationBuilder.append(someInterface.getName()).append(" ");
             }
         }
-        return declaration.toString();
+        return declarationBuilder.toString();
     }
 
     private static String methodToString(@NotNull Method someMethod) {
@@ -93,7 +93,8 @@ public class Reflector {
 //        someField.setAccessible(true);
 //        printModifiers(someField.getModifiers(), out);
 //        out.write(someField.getType().getName() + " ");
-        return someField.toGenericString();
+//        return someField.toGenericString();
+        StringBuilder field = new StringBuilder();
     }
 
     public static void diffClasses(Class<?> a, Class<?> b) {}
