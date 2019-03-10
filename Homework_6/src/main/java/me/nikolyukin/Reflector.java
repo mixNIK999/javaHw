@@ -22,12 +22,12 @@ public class Reflector {
 
         out.write(declarationToString(someClass));
 
-        out.write("{\n");
+        out.write("{\n\n");
 
         for (Field someField : someClass.getDeclaredFields()) {
             out.write(fieldToString(someField) + "\n");
         }
-
+        out.write("\n");
         for (Method someMethod : someClass.getDeclaredMethods()) {
             out.write(methodToString(someMethod) + "\n");
         }
@@ -37,7 +37,10 @@ public class Reflector {
     @NotNull
     private static String declarationToString(@NotNull Class<?> someClass) {
         StringBuilder declarationBuilder = new StringBuilder();
-        declarationBuilder.append(modifiersToString(someClass.getModifiers())).append(" ");
+        var mods = modifiersToString(someClass.getModifiers());
+        if (mods.length() != 0) {
+            declarationBuilder.append(mods).append(" ");
+        }
         declarationBuilder.append(someClass.getSimpleName());
 
         TypeVariable<?>[] parameters = someClass.getTypeParameters();
@@ -94,7 +97,14 @@ public class Reflector {
 //        printModifiers(someField.getModifiers(), out);
 //        out.write(someField.getType().getName() + " ");
 //        return someField.toGenericString();
-        StringBuilder field = new StringBuilder();
+        StringBuilder fieldBuilder = new StringBuilder();
+        var mods = modifiersToString(someField.getModifiers());
+        if (mods.length() != 0) {
+            fieldBuilder.append(modifiersToString(someField.getModifiers())).append(" ");
+        }
+        fieldBuilder.append(someField.getGenericType().getTypeName()).append(" ");
+        fieldBuilder.append(someField.getName());
+        return fieldBuilder.toString();
     }
 
     public static void diffClasses(Class<?> a, Class<?> b) {}
