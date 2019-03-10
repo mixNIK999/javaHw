@@ -33,6 +33,4 @@ public class TestGenericClass<T extends Object> {
     }
 
     static class NestedClass {}
-
-    public class InnerClass {}
 }
