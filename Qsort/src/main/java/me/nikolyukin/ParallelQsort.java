@@ -125,7 +125,7 @@ public class ParallelQsort {
             }
 
             if (i < right) {
-                executor.submit(new RunSort<>(array, comparator, doneCounter, executor, i, right));
+                (new RunSort<>(array, comparator, doneCounter, executor, i, right)).run();
             }
         }
     }

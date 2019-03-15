@@ -77,8 +77,8 @@ class ParallelQsortTest {
     void qsortCompareManyThreadsWhitOne() throws InterruptedException {
         ArrayList<Integer> list = new ArrayList<>();
         int duplicates = 5;
-        int maxSize = 100_001;
-        int step = 1000;
+        int maxSize = 1_000_001;
+        int step = 5000;
         for (int i = 0; i < maxSize; i += step) {
             Collections.shuffle(list);
             var copyList = new ArrayList<>(list);
@@ -93,7 +93,7 @@ class ParallelQsortTest {
             long oneThreadTime = oneThreadEnd - oneThreadStart;
 
             System.out.printf("size %d: 6 thread %d; 1 threads %d; Batter? %b\n",
-                i*5, manyThreadTime, oneThreadTime, manyThreadTime < oneThreadTime);
+                i*duplicates, manyThreadTime, oneThreadTime, manyThreadTime < oneThreadTime);
             for(int j = i; j < i + step; j++) {
                 for (int k = 0; k < duplicates; k++) {
                     list.add(j);
