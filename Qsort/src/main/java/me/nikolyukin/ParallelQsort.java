@@ -53,7 +53,7 @@ public class ParallelQsort {
     /**
      * Метод сортирует лист используя natural order.
      * Позволяет задать число потоков. Если threadNumber < 1, то число потоков будет неограниченно.
-     * 
+     *
      * @param list лист, который будет отсортировон
      * @param threadNumber число потоков, которое будет использованно
      * @param <T> тип сортируеммых данных
@@ -112,10 +112,11 @@ public class ParallelQsort {
                     j--;
                 }
             }
-
-            if (doneCounter.addAndGet(i - j - 1) == array.length) {
-                synchronized (array) {
-                    notify();
+            if (i - j - 1 > 0) {
+                if (doneCounter.addAndGet(i - j - 1) == array.length) {
+                    synchronized (array) {
+                        notify();
+                    }
                 }
             }
 
