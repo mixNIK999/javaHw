@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTreeSet<E> {
     private int size = 0;
-    private @NotNull Node<E> root = new Node<>();
+    private final @NotNull Node<E> root = new Node<>();
     private Comparator<? super E> comparator;
 
     /**
@@ -76,7 +76,7 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
             return false;
         }
 
-        var newNode = new Node<E>(e, foundNode);
+        var newNode = new Node<>(e, foundNode);
         if (Comparator.nullsFirst(comparator).compare(e, foundNode.value) > 0) {
             foundNode.rightChild = newNode;
         } else {
@@ -150,8 +150,9 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
      **/
     @Override
     public MyTreeSet<E> descendingSet() {
-        comparator = comparator.reversed();
-        return this;
+        MyTreeSet<E> descendingSet = new MyTreeSetImplementation<>(comparator.reversed());
+        descendingSet.addAll(this);
+        return  descendingSet;
     }
 
     /**
