@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTreeSet<E> {
     private int size = 0;
-    private Node<E> root = new Node<>();
+    private @NotNull Node<E> root = new Node<>();
     private Comparator<? super E> comparator;
 
     /**
@@ -71,15 +71,16 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
      */
     @Override
     public boolean add(E e) {
-        var lowerNode = lowerBoundNode(e);
-        if (Comparator.nullsFirst(comparator).compare(e, lowerNode.value) == 0) {
+        var foundNode = find(e);
+        if (Comparator.nullsFirst(comparator).compare(e, foundNode.value) == 0) {
             return false;
         }
-        var oldRightChild = lowerNode.rightChild;
-        lowerNode.rightChild = new Node<>(e, lowerNode);
-        lowerNode.rightChild.rightChild = oldRightChild;
-        if (oldRightChild != null) {
-            oldRightChild.parent = lowerNode.rightChild;
+
+        var newNode = new Node<E>(e, foundNode);
+        if (Comparator.nullsFirst(comparator).compare(e, foundNode.value) > 0) {
+            foundNode.rightChild = newNode;
+        } else {
+            foundNode.leftChild = newNode;
         }
         size++;
         return true;
@@ -179,6 +180,12 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
 
     @NotNull
     private Node<E> lowerBoundNode(E element) {
+        Node<E> currentNode = find(element);
+        return (Comparator.nullsLast(comparator).compare(element, currentNode.value) >= 0) ? currentNode
+            : currentNode.goPrev();
+    }
+
+    private Node<E> find(E element) {
         var currentNode = root;
         var nextNode = root.rightChild;
         while (nextNode != null) {
@@ -192,8 +199,7 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
                 nextNode = currentNode.leftChild;
             }
         }
-        return (Comparator.nullsLast(comparator).compare(element, currentNode.value) >= 0) ? currentNode
-            : currentNode.goPrev();
+        return currentNode;
     }
 
     private class TreeIterator implements Iterator<E> {
