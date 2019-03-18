@@ -8,7 +8,7 @@ import java.util.TreeSet;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Контейней для хранения данных с использованием бинарного дерева
+ * Контейнер  для хранения данных с использованием бинарного дерева
  * @param <E> тип данных. Обязан быть задан любо Comparator, либо natural ordering.
  */
 public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTreeSet<E> {
@@ -17,10 +17,11 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
     private Comparator<? super E> comparator;
 
     /**
-     * Контсруктор по умолчанию, использует natural ordering
+     * Контсруктор по умолчанию, использует natural ordering.
+     * Параметр E должен быть Comparable<? super T>
      */
     public MyTreeSetImplementation() {
-        this(null);
+        this((element1, element2) -> ((Comparable<E>) element1).compareTo(element2));
     }
 
     /**
@@ -32,20 +33,20 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
     }
 
     /**
-     * Returns an iterator over the elements contained in this collection.
+     * Method creates an iterator over the elements in this set in proper sequence
      *
      * @return an iterator over the elements contained in this collection
      */
     @NotNull
     @Override
-    public TreeIterator<E> iterator() {
+    public Iterator<E> iterator() {
         var currentNode = root;
         currentNode.push();
-        while(currentNode.leftChild != null) {
+        while (currentNode.leftChild != null) {
             currentNode = currentNode.leftChild;
             currentNode.push();
         }
-        return new TreeIterator<>(currentNode);
+        return new TreeIterator(currentNode);
     }
 
     /**
@@ -94,11 +95,11 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
     public Iterator<E> descendingIterator() {
         var currentNode = root;
         currentNode.push();
-        while(currentNode.rightChild != null) {
+        while (currentNode.rightChild != null) {
             currentNode = currentNode.rightChild;
             currentNode.push();
         }
-        return new descendingIterator<>(currentNode);
+        return new DescendingIterator(currentNode);
     }
 
     /**
@@ -202,9 +203,9 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
             : currentNode.goPrev();
     }
 
-    private class TreeIterator<T> implements Iterator<T> {
+    private class TreeIterator implements Iterator<E> {
 
-        private Node<T> prevElement;
+        private Node<E> prevElement;
 
         /**
          * Returns {@code true} if the iteration has more elements. (In other words, returns {@code
@@ -224,7 +225,7 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
          * @throws NoSuchElementException if the iteration has no more elements
          */
         @Override
-        public T next() {
+        public E next() {
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
@@ -232,14 +233,14 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
             return prevElement.value;
         }
 
-        private TreeIterator(Node<T> prevElement) {
+        private TreeIterator(Node<E> prevElement) {
             this.prevElement = prevElement;
         }
     }
 
-    private class descendingIterator<T> implements Iterator<T> {
+    private class DescendingIterator implements Iterator<E> {
 
-        private Node<T> prevElement;
+        private Node<E> prevElement;
         /**
          * Returns {@code true} if the iteration has more elements. (In other words, returns {@code
          * true} if {@link #next} would return an element rather than throwing an exception.)
@@ -258,7 +259,7 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
          * @throws NoSuchElementException if the iteration has no more elements
          */
         @Override
-        public T next() {
+        public E next() {
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
@@ -267,7 +268,7 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
             return value;
         }
         
-        private descendingIterator(Node<T> prevElement) {
+        private DescendingIterator(Node<E> prevElement) {
             this.prevElement = prevElement;
         }
     }
@@ -292,13 +293,13 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
             if (currentNode.rightChild != null) {
                 currentNode = currentNode.rightChild;
                 currentNode.push();
-                while(currentNode.leftChild != null) {
+                while (currentNode.leftChild != null) {
                     currentNode = currentNode.leftChild;
                     currentNode.push();
                 }
                 return currentNode;
             }
-            while(currentNode.parent != null) {
+            while (currentNode.parent != null) {
                 if (currentNode.parent.leftChild == currentNode) {
                     return currentNode.parent;
                 }
@@ -314,13 +315,13 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
             if (currentNode.leftChild != null) {
                 currentNode = currentNode.leftChild;
                 currentNode.push();
-                while(currentNode.rightChild != null) {
+                while (currentNode.rightChild != null) {
                     currentNode = currentNode.rightChild;
                     currentNode.push();
                 }
                 return currentNode;
             }
-            while(currentNode.parent != null) {
+            while (currentNode.parent != null) {
                 if (currentNode.parent.rightChild == currentNode) {
                     return currentNode.parent;
                 }
