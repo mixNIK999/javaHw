@@ -10,7 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class PhoneBookTest {
-    PhoneBook emptyPhoneBook;
+    private PhoneBook emptyPhoneBook;
     private PhoneBook fullPhoneBook;
 
     @BeforeEach
