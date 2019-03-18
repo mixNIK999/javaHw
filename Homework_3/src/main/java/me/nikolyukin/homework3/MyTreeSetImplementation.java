@@ -87,6 +87,52 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
     }
 
     /**
+     * {@inheritDoc}
+     *
+     * @throws ClassCastException {@inheritDoc}
+     * @throws NullPointerException {@inheritDoc}
+     * @implSpec This implementation iterates over the elements in the collection, checking each
+     * element in turn for equality with the specified element.
+     * @param element
+     */
+    @Override
+    public boolean contains(Object element) {
+        return find((E) element).value.equals(element);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @throws UnsupportedOperationException {@inheritDoc}
+     * @throws ClassCastException {@inheritDoc}
+     * @throws NullPointerException {@inheritDoc}
+     * @implSpec This implementation iterates over the collection looking for the specified element.
+     *  If it finds the element, it removes the element from the collection
+     *
+     */
+    @Override
+    public boolean remove(Object element) {
+        Node<E> foundNode = find((E) element);
+        if (!foundNode.value.equals(element)) {
+            return false;
+        }
+        removeNode(foundNode);
+        return true;
+    }
+
+    private void removeNode(Node<E> node) {
+        Node<E> newChild;
+        if (node.rightChild == null) {
+            newChild = node.leftChild;
+        } else if (node.leftChild == null) {
+            newChild = node.rightChild;
+        } else {
+            newChild = node.goNext();
+            removeNode(newChild);
+        }
+        node.putInstead(newChild);
+    }
+    /**
      * {@link TreeSet#descendingIterator()}
      **/
     @NotNull
@@ -321,6 +367,19 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
             return currentNode;
         }
 
-    }
 
+        private void putInstead(Node<E> other) {
+            if (parent != null) {
+                if (parent.rightChild == this) {
+                    parent.rightChild = other;
+                } else {
+                    parent.leftChild = other;
+                }
+                if (other != null) {
+                    other.parent = parent;
+                }
+                parent = null;
+            }
+        }
+    }
 }
