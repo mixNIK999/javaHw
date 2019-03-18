@@ -41,10 +41,8 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
     @Override
     public Iterator<E> iterator() {
         var currentNode = root;
-        currentNode.push();
         while (currentNode.leftChild != null) {
             currentNode = currentNode.leftChild;
-            currentNode.push();
         }
         return new TreeIterator(currentNode);
     }
@@ -94,10 +92,8 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
     @Override
     public Iterator<E> descendingIterator() {
         var currentNode = root;
-        currentNode.push();
         while (currentNode.rightChild != null) {
             currentNode = currentNode.rightChild;
-            currentNode.push();
         }
         return new DescendingIterator(currentNode);
     }
@@ -107,7 +103,6 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
      **/
     @Override
     public MyTreeSet<E> descendingSet() {
-        root.rightChild.needToReverse = !root.rightChild.needToReverse;
         comparator = comparator.reversed();
         return this;
     }
@@ -186,10 +181,8 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
     private Node<E> lowerBoundNode(E element) {
         var currentNode = root;
         var nextNode = root.rightChild;
-        currentNode.push();
         while (nextNode != null) {
             currentNode = nextNode;
-            currentNode.push();
             int compareRes = comparator.compare(element, currentNode.value);
             if (compareRes > 0) {
                 nextNode = currentNode.rightChild;
@@ -278,24 +271,20 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
         private Node<E> rightChild;
         private Node<E> parent;
         private E value;
-        private boolean needToReverse = false;
 
         private Node() {}
 
-        private Node(E value, Node parent) {
+        private Node(E value, Node<E> parent) {
             this.value = value;
             this.parent = parent;
         }
 
         private Node<E> goNext() {
-            push();
             var currentNode = this;
             if (currentNode.rightChild != null) {
                 currentNode = currentNode.rightChild;
-                currentNode.push();
                 while (currentNode.leftChild != null) {
                     currentNode = currentNode.leftChild;
-                    currentNode.push();
                 }
                 return currentNode;
             }
@@ -304,20 +293,16 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
                     return currentNode.parent;
                 }
                 currentNode = currentNode.parent;
-                currentNode.push();
             }
             return currentNode;
         }
 
         private Node<E> goPrev() {
-            push();
             var currentNode = this;
             if (currentNode.leftChild != null) {
                 currentNode = currentNode.leftChild;
-                currentNode.push();
                 while (currentNode.rightChild != null) {
                     currentNode = currentNode.rightChild;
-                    currentNode.push();
                 }
                 return currentNode;
             }
@@ -326,26 +311,10 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
                     return currentNode.parent;
                 }
                 currentNode = currentNode.parent;
-                currentNode.push();
             }
             return currentNode;
         }
 
-        private void push() {
-            if (needToReverse) {
-                var tmp = leftChild;
-                leftChild =  rightChild;
-                rightChild = tmp;
-                needToReverse = false;
-
-                if (leftChild != null) {
-                    leftChild.needToReverse = !leftChild.needToReverse;
-                }
-                if (rightChild != null) {
-                    rightChild.needToReverse = !rightChild.needToReverse;
-                }
-            }
-        }
     }
 
 }
