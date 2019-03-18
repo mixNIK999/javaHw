@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 class MyTreeSetImplementationTest {
     private MyTreeSet<Integer> emptyTreeSet;
     private MyTreeSet<Integer> treeSet532;
-    
+
     @BeforeEach
     void init() {
         emptyTreeSet = new MyTreeSetImplementation<>();

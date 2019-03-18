@@ -21,7 +21,7 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
      * Параметр E должен быть Comparable<? super T>
      */
     public MyTreeSetImplementation() {
-        this((element1, element2) -> ((Comparable<E>) element1).compareTo(element2));
+        this((element1, element2) -> ((Comparable<? super E>) element1).compareTo(element2));
     }
 
     /**
@@ -70,7 +70,7 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
      * @implSpec This implementation always throws an {@code UnsupportedOperationException}.
      */
     @Override
-    public boolean add(E e) {
+    public boolean add(@NotNull E e) {
         var foundNode = find(e);
         if (Comparator.nullsFirst(comparator).compare(e, foundNode.value) == 0) {
             return false;
@@ -111,7 +111,7 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
      *
      */
     @Override
-    public boolean remove(Object element) {
+    public boolean remove(@NotNull Object element) {
         Node<E> foundNode = find((E) element);
         if (!element.equals(foundNode.value)) {
             return false;
@@ -184,7 +184,7 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
      * {@link TreeSet#lower(Object)}
      **/
     @Override
-    public E lower(E e) {
+    public E lower(@NotNull E e) {
         var currentNode = lowerBoundNode(e);
         if (currentNode == root) {
             return null;
@@ -199,7 +199,7 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
      * {@link TreeSet#lower(Object)}
      **/
     @Override
-    public E floor(E e) {
+    public E floor(@NotNull E e) {
         return lowerBoundNode(e).value;
     }
 
@@ -207,7 +207,7 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
      * {@link TreeSet#ceiling(Object)}
      **/
     @Override
-    public E ceiling(E e) {
+    public E ceiling(@NotNull E e) {
         var currentNode = lowerBoundNode(e);
         if (currentNode == root) {
             return null;
@@ -222,18 +222,18 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
      * {@link TreeSet#higher(Object)}
      **/
     @Override
-    public E higher(E e) {
+    public E higher(@NotNull E e) {
         return lowerBoundNode(e).goNext().value;
     }
 
     @NotNull
-    private Node<E> lowerBoundNode(E element) {
+    private Node<E> lowerBoundNode(@NotNull E element) {
         Node<E> currentNode = find(element);
         return (Comparator.nullsLast(comparator).compare(element, currentNode.value) >= 0) ? currentNode
             : currentNode.goPrev();
     }
 
-    private Node<E> find(E element) {
+    private Node<E> find(@NotNull E element) {
         var currentNode = root;
         var nextNode = root.rightChild;
         while (nextNode != null) {
