@@ -97,7 +97,7 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
      */
     @Override
     public boolean contains(Object element) {
-        return find((E) element).value.equals(element);
+        return element.equals(find((E) element).value);
     }
 
     /**
@@ -113,14 +113,14 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
     @Override
     public boolean remove(Object element) {
         Node<E> foundNode = find((E) element);
-        if (!foundNode.value.equals(element)) {
+        if (!element.equals(foundNode.value)) {
             return false;
         }
         removeNode(foundNode);
         return true;
     }
 
-    private void removeNode(Node<E> node) {
+    private void removeNode(@NotNull Node<E> node) {
         Node<E> newChild;
         if (node.rightChild == null) {
             newChild = node.leftChild;
@@ -131,6 +131,7 @@ public class MyTreeSetImplementation<E> extends AbstractSet<E> implements MyTree
             removeNode(newChild);
         }
         node.putInstead(newChild);
+        size--;
     }
     /**
      * {@link TreeSet#descendingIterator()}

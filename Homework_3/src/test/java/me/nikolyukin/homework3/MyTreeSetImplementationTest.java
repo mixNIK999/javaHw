@@ -3,12 +3,14 @@ package me.nikolyukin.homework3;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Comparator;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class MyTreeSetImplementationTest {
     private MyTreeSet<Integer> emptyTreeSet;
     private MyTreeSet<Integer> treeSet532;
+    
     @BeforeEach
     void init() {
         emptyTreeSet = new MyTreeSetImplementation<>();
@@ -50,6 +52,12 @@ class MyTreeSetImplementationTest {
     void addTrue() {
         assertTrue(treeSet532.add(8));
         assertEquals(4, treeSet532.size());
+    }
+
+    @Test
+    void addInEmpty() {
+        assertTrue(emptyTreeSet.add(1));
+        assertFalse(emptyTreeSet.add(1));
     }
 
     @Test
@@ -142,5 +150,58 @@ class MyTreeSetImplementationTest {
     @Test
     void higherNotNull() {
         assertEquals(Integer.valueOf(2), treeSet532.higher(3));
+    }
+
+    @Test
+    void containsFalse() {
+        assertFalse(emptyTreeSet.contains(0));
+        assertFalse(treeSet532.contains(0));
+    }
+
+    @Test
+    void containsTrue() {
+        assertTrue(treeSet532.contains(2));
+        assertTrue(treeSet532.contains(3));
+        assertTrue(treeSet532.contains(5));
+    }
+
+    @Test
+    void removeFalse() {
+        assertFalse(emptyTreeSet.remove(0));
+        assertFalse(treeSet532.remove(0));
+    }
+
+    @Test
+    void removeTrue() {
+        assertTrue(treeSet532.remove(2));
+        assertTrue(treeSet532.remove(3));
+        assertTrue(treeSet532.remove(5));
+        assertEquals(0, treeSet532.size());
+    }
+
+    @Test
+    void removeAddTakeDescendingSet() {
+        assertTrue(treeSet532.remove(2));
+        assertTrue(treeSet532.add(10));
+        var dSet = treeSet532.descendingSet();
+        assertTrue(dSet.remove(5));
+        assertTrue(dSet.add(100));
+
+        assertTrue(dSet.contains(100));
+        assertFalse(dSet.contains(5));
+
+        assertTrue(treeSet532.contains(5));
+        assertFalse(treeSet532.contains(100));
+    }
+
+    @Test
+    void descendingIteratorFromDescendingSet() {
+        var iterator = treeSet532.iterator();
+        var descendingIterator = treeSet532.descendingSet().descendingIterator();
+        assertEquals(iterator.next(), descendingIterator.next());
+        assertEquals(iterator.next(), descendingIterator.next());
+        assertEquals(iterator.next(), descendingIterator.next());
+        assertThrows(NoSuchElementException.class, iterator::next);
+        assertThrows(NoSuchElementException.class, descendingIterator::next);
     }
 }
