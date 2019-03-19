@@ -1,5 +1,6 @@
 package me.nikolyukin.homework5;
 
+import com.intellij.openapi.util.Pair;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,7 +8,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import kotlin.Pair;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -94,10 +94,10 @@ public class PhoneBook implements AutoCloseable {
      * @throws SQLException если не удалось создать PreparedStatement
      */
     public ArrayList<String> findNames(@NotNull String number) throws SQLException {
-        final String sqlTakeNames = "SELECT Names.Name"
-            + "FROM Names, NameNumber, Numbers"
-            + "WHERE Names.Id = NameNumber.NameId AND NameNumber.NumberId = Numbers.Id"
-            + "AND Numbers.Number = ?";
+        final String sqlTakeNames = "SELECT Names.Name\n"
+            + "FROM Names, NameNumber, Numbers\n"
+            + "WHERE Names.Id = NameNumber.NameId AND NameNumber.NumberId = Numbers.Id\n"
+            + "AND Numbers.Number = ?;";
 
         var result = new ArrayList<String>();
 
@@ -120,10 +120,10 @@ public class PhoneBook implements AutoCloseable {
      * @throws SQLException если не удалось создать PreparedStatement
      */
     public ArrayList<String> findNumbers(@NotNull String name) throws SQLException {
-        final String sqlTakeNumbers = "SELECT Numbers.Number"
-            + "FROM Names, NameNumber, Numbers"
-            + "WHERE Names.Id = NameNumber.NameId AND NameNumber.NumberId = Numbers.Id"
-            + "AND Names.name = ?";
+        final String sqlTakeNumbers = "SELECT Numbers.Number\n"
+            + "FROM Names, NameNumber, Numbers\n"
+            + "WHERE Names.Id = NameNumber.NameId AND NameNumber.NumberId = Numbers.Id\n"
+            + "AND Names.name = ?;";
 
         var result = new ArrayList<String>();
 
@@ -147,10 +147,10 @@ public class PhoneBook implements AutoCloseable {
      * @throws SQLException если не удалось создать PreparedStatement
      */
     public void delete(@NotNull String name, @NotNull String number) throws SQLException {
-        final String sqlDeleteRelation = "DELETE ab\n"
-            + "FROM Names AS a, NameNumber AS ab, Numbers AS b\n"
-            + "WHERE a.Id = ab.NameId AND ab.NumberId = b.Id\n"
-            + "AND a.Name = ? AND b.Number = ?;";
+        final String sqlDeleteRelation = "DELETE\n"
+            + "FROM NameNumber\n"
+            + "WHERE NameId IN (SELECT Id FROM Names WHERE Name = ?)\n"
+            + "AND NumberId IN (SELECT Id FROM Numbers WHERE Number = ?);";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sqlDeleteRelation)) {
             preparedStatement.setString(1, name);
@@ -163,7 +163,7 @@ public class PhoneBook implements AutoCloseable {
             + "WHERE Id NOT IN (SELECT NameId FROM NameNumber);";
 
         final String sqlClearNumbers = "DELETE FROM Numbers\n"
-            + "WHERE Id NOT IN (SELECT NumbersId FROM NameNumber);";
+            + "WHERE Id NOT IN (SELECT NumberId FROM NameNumber);";
 
         try (Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(sqlClearNames);
@@ -223,13 +223,6 @@ public class PhoneBook implements AutoCloseable {
             }
         }
         return result;
-    }
-
-    private void drop() throws SQLException {
-        final String sqlDropAll = "DROP TABLE IF EXISTS Names; DROP TABLE IF EXISTS NameNumber; DROP TABLE IF EXISTS Numbers";
-        try (Statement stmt = connection.createStatement()) {
-            stmt.executeUpdate(sqlDropAll);
-        }
     }
 
     /**
