@@ -22,15 +22,27 @@ public class PhoneBook implements AutoCloseable {
      * @throws SQLException если не удалось создать Statement
      */
     public PhoneBook(@NotNull Connection connection) throws SQLException {
-        final String sql = "CREATE TABLE IF NOT EXISTS phoneBook (\n"
-            + "	id integer PRIMARY KEY,\n"
-            + "	name text NOT NULL,\n"
-            + "	number text NOT NULL\n"
+        final String sqlCreate = "CREATE TABLE IF NOT EXISTS Names (\n"
+            + "Id INTEGER NOT NULL PRIMARY KEY,\n"
+            + "Name TEXT NOT NULL"
+            + ");\n"
+
+            + "CREATE TABLE IF NOT EXISTS Numbers (\n"
+            + "Id INTEGER NOT NULL PRIMARY KEY,\n"
+            + "Number TEXT NOT NULL"
+            + ");\n"
+
+            + "CREATE TABLE IF NOT EXISTS NameNumber (\n"
+            + "NameId INTEGER NOT NULL,\n"
+            + "NumberId INTEGER NOT NULL,\n"
+            + "FOREIGN KEY (NameId) REFERENCES Names(Id)\n"
+            + "FOREIGN KEY (NumberId) REFERENCES Numbers(Id)\n"
             + ");";
+
         this.connection = connection;
 
         try (Statement stmt = connection.createStatement()) {
-            stmt.executeUpdate(sql);
+            stmt.executeUpdate(sqlCreate);
         }
 
     }
@@ -43,14 +55,35 @@ public class PhoneBook implements AutoCloseable {
      * @throws SQLException если не удалось создать PreparedStatement
      */
     public void add(@NotNull String name, @NotNull String number) throws SQLException {
-        final String sql = "INSERT INTO phoneBook(name,number) VALUES(?,?)";
+        final String sqlInsertName = "INSERT INTO Names(Name)"
+            + "SELECT ? WHERE NOT EXISTS (SELECT * FROM Names WHERE Name = ?);";
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sqlInsertName)) {
             preparedStatement.setString(1, name);
+            preparedStatement.setString(2, name);
+            preparedStatement.executeUpdate();
+        }
+
+        final String sqlInsertNumber = "INSERT INTO Numbers(Number)"
+            + "SELECT ? WHERE NOT EXISTS (SELECT * FROM Numbers WHERE Number = ?);";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sqlInsertNumber)) {
+            preparedStatement.setString(1, number);
             preparedStatement.setString(2, number);
             preparedStatement.executeUpdate();
         }
 
+        final String sqlInsertRelation = "INSERT INTO NameNumber(NameId, NumberId)\n"
+            + "SELECT Names.Id, Numbers.Id\n"
+            + "FROM Names, Numbers\n"
+            + "WHERE Names.Name = ? AND Numbers.Number = ?\n";
+//            + "AND NOT EXISTS (SELECT * FROM NameNumber WHERE NameId = Names.Id AND NumberId = Numbers.Id);";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sqlInsertRelation)) {
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, number);
+            preparedStatement.executeUpdate();
+        }
     }
 
     /**
@@ -61,14 +94,18 @@ public class PhoneBook implements AutoCloseable {
      * @throws SQLException если не удалось создать PreparedStatement
      */
     public ArrayList<String> findNames(@NotNull String number) throws SQLException {
-        final String sql = "SELECT name, number FROM phoneBook WHERE number = ?";
+        final String sqlTakeNames = "SELECT Names.Name"
+            + "FROM Names, NameNumber, Numbers"
+            + "WHERE Names.Id = NameNumber.NameId AND NameNumber.NumberId = Numbers.Id"
+            + "AND Numbers.Number = ?";
+
         var result = new ArrayList<String>();
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sqlTakeNames)) {
             preparedStatement.setString(1, number);
             try (ResultSet rs = preparedStatement.executeQuery()) {
                 while (rs.next()) {
-                    result.add(rs.getString("name"));
+                    result.add(rs.getString("Name"));
                 }
             }
         }
@@ -83,14 +120,18 @@ public class PhoneBook implements AutoCloseable {
      * @throws SQLException если не удалось создать PreparedStatement
      */
     public ArrayList<String> findNumbers(@NotNull String name) throws SQLException {
-        final String sql = "SELECT name, number FROM phoneBook WHERE name = ?";
+        final String sqlTakeNumbers = "SELECT Numbers.Number"
+            + "FROM Names, NameNumber, Numbers"
+            + "WHERE Names.Id = NameNumber.NameId AND NameNumber.NumberId = Numbers.Id"
+            + "AND Names.name = ?";
+
         var result = new ArrayList<String>();
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sqlTakeNumbers)) {
             preparedStatement.setString(1, name);
             try (ResultSet rs = preparedStatement.executeQuery()) {
                 while (rs.next()) {
-                    result.add(rs.getString("number"));
+                    result.add(rs.getString("Number"));
                 }
             }
         }
@@ -106,12 +147,29 @@ public class PhoneBook implements AutoCloseable {
      * @throws SQLException если не удалось создать PreparedStatement
      */
     public void delete(@NotNull String name, @NotNull String number) throws SQLException {
-        final String sql = "DELETE FROM phoneBook WHERE name = ? AND number = ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        final String sqlDeleteRelation = "DELETE ab\n"
+            + "FROM Names AS a, NameNumber AS ab, Numbers AS b\n"
+            + "WHERE a.Id = ab.NameId AND ab.NumberId = b.Id\n"
+            + "AND a.Name = ? AND b.Number = ?;";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sqlDeleteRelation)) {
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, number);
             preparedStatement.executeUpdate();
         }
+
+        final String sqlClearNames = "DELETE\n"
+            + "FROM Names\n"
+            + "WHERE Id NOT IN (SELECT NameId FROM NameNumber);";
+
+        final String sqlClearNumbers = "DELETE FROM Numbers\n"
+            + "WHERE Id NOT IN (SELECT NumbersId FROM NameNumber);";
+
+        try (Statement stmt = connection.createStatement()) {
+            stmt.executeUpdate(sqlClearNames);
+            stmt.executeUpdate(sqlClearNumbers);
+        }
+
     }
 
     /**
@@ -126,13 +184,8 @@ public class PhoneBook implements AutoCloseable {
             @NotNull String number,
             @NotNull String newNumber) throws SQLException {
 
-        final String sql = "UPDATE phoneBook SET number = ? WHERE name = ? AND number = ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, newNumber);
-            preparedStatement.setString(2, name);
-            preparedStatement.setString(3, number);
-            preparedStatement.executeUpdate();
-        }
+        delete(name, number);
+        add(name, newNumber);
     }
 
     /**
@@ -146,13 +199,8 @@ public class PhoneBook implements AutoCloseable {
         @NotNull String number,
         @NotNull String newName) throws SQLException {
 
-        final String sql = "UPDATE phoneBook SET name = ? WHERE name = ? AND number = ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, newName);
-            preparedStatement.setString(2, name);
-            preparedStatement.setString(3, number);
-            preparedStatement.executeUpdate();
-        }
+        delete(name, number);
+        add(newName, number);
     }
 
     /**
@@ -161,11 +209,13 @@ public class PhoneBook implements AutoCloseable {
      * @throws SQLException если не удалось создать Statement
      */
     public List<Pair<String, String>> getAll() throws SQLException {
-        final String sql = "SELECT name, number FROM phoneBook";
+        final String sqlGetAll = "SELECT a.Name, b.Number\n"
+            + "FROM Names AS a, NameNumber AS ab, Numbers AS b\n"
+            + "WHERE a.Id = ab.NameId AND ab.NumberId = b.Id\n;";
         var result = new ArrayList<Pair<String, String>>();
 
         try (Statement stmt = connection.createStatement()) {
-            try (ResultSet rs = stmt.executeQuery(sql)) {
+            try (ResultSet rs = stmt.executeQuery(sqlGetAll)) {
                 while (rs.next()) {
                     result.add(new Pair<>(rs.getString("name"),
                                           rs.getString("number")));
@@ -173,6 +223,13 @@ public class PhoneBook implements AutoCloseable {
             }
         }
         return result;
+    }
+
+    private void drop() throws SQLException {
+        final String sqlDropAll = "DROP TABLE IF EXISTS Names; DROP TABLE IF EXISTS NameNumber; DROP TABLE IF EXISTS Numbers";
+        try (Statement stmt = connection.createStatement()) {
+            stmt.executeUpdate(sqlDropAll);
+        }
     }
 
     /**
