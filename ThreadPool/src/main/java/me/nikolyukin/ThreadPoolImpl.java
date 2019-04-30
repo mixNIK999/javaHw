@@ -7,14 +7,14 @@ import java.util.function.Supplier;
 import org.jetbrains.annotations.NotNull;
 
 public class ThreadPoolImpl implements ThreadPool {
-    private ArrayList<Thread> treadList;
+    private ArrayList<Thread> threadList;
     private ThreadSafeQueue<LightFutureImpl> taskQueue;
 
     public ThreadPoolImpl(int size) {
-        treadList = new ArrayList<>(size);
+        threadList = new ArrayList<>(size);
         taskQueue = new ThreadSafeQueue<>();
         for (int i = 0; i < size; i++) {
-            treadList.set(i, new Thread(() -> {
+            threadList.set(i, new Thread(() -> {
                 try {
                     taskQueue.pop().calculate();
                 } catch (InterruptedException e) {
@@ -26,12 +26,16 @@ public class ThreadPoolImpl implements ThreadPool {
 
     @Override
     public <T> LightFuture<T> submit(Supplier<T> task) {
-        return null;
+        var newTask = new LightFutureImpl<>(task);
+        taskQueue.push(newTask);
+        return newTask;
     }
 
     @Override
     public void shutdown() {
-
+        for (var thread : threadList) {
+            thread.interrupt();
+        }
     }
 
     private static class ThreadSafeQueue<E> {
@@ -102,14 +106,18 @@ public class ThreadPoolImpl implements ThreadPool {
         }
 
         private void calculate() throws InterruptedException {
-            try {
-                result = task.get();
-            } catch (Throwable e) {
-                exception = e;
+            ThreadSafeQueue<LightFutureImpl> needToAdd;
+            synchronized (this) {
+                try {
+                    result = task.get();
+                } catch (Throwable e) {
+                    exception = e;
+                }
+                needToAdd = nextTasks;
+                nextTasks = taskQueue;
+                task = null;
+                notifyAll();
             }
-            var needToAdd = nextTasks;
-            nextTasks = taskQueue;
-            task = null;
             while(!needToAdd.isEmpty()) {
                 taskQueue.push(needToAdd.pop());
             }
