@@ -50,7 +50,7 @@ gradle-app.setting
 **/.idea/**/gradle.xml
 **/.idea/**/libraries
 
-# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
-!gradle-wrapper.jar
-
 Homework_5/phoneBook\.db
+Homework_3/\.idea/uiDesigner\.xml
+Homework_3/out/production/resources/META-INF/plugin\.xml
+
