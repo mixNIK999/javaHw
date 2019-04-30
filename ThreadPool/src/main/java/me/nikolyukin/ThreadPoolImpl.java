@@ -1,5 +1,6 @@
 package me.nikolyukin;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Queue;
 import java.util.function.Function;
@@ -15,10 +16,12 @@ public class ThreadPoolImpl implements ThreadPool {
         taskQueue = new ThreadSafeQueue<>();
         for (int i = 0; i < size; i++) {
             threadList.set(i, new Thread(() -> {
-                try {
-                    taskQueue.pop().calculate();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                while (true) {
+                    try {
+                        taskQueue.pop().calculate();
+                    } catch (InterruptedException e) {
+                        return;
+                    }
                 }
             }));
         }
@@ -40,6 +43,10 @@ public class ThreadPoolImpl implements ThreadPool {
 
     private static class ThreadSafeQueue<E> {
         Queue<E> queue;
+
+        public ThreadSafeQueue() {
+            queue = new ArrayDeque<>();
+        }
 
         private synchronized void push(@NotNull E data) {
             queue.add(data);
