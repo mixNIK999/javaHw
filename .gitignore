@@ -48,3 +48,7 @@ gradle-app.setting
 # IDEA Gradle
 **/.idea/**/gradle.xml
 **/.idea/**/libraries
+
+Homework_3/\.idea/uiDesigner\.xml
+
+Homework_3/out/production/resources/META-INF/plugin\.xml
