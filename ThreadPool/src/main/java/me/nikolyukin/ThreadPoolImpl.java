@@ -48,15 +48,19 @@ public class ThreadPoolImpl implements ThreadPool {
             }
             return queue.remove();
         }
+
+        private synchronized boolean isEmpty() {
+            return queue.isEmpty();
+        }
     }
 
     private class LightFutureImpl<T> implements LightFuture<T> {
         private volatile Supplier<T> task;
         private T result;
-        private Exception exeption;
-        private ThreadSafeQueue<LightFuture> nextTasks;
+        private Throwable exception;
+        private volatile ThreadSafeQueue<LightFutureImpl> nextTasks;
 
-        public LightFutureImpl(Supplier<T> task) {
+        private LightFutureImpl(@NotNull Supplier<T> task) {
             this.task = task;
             nextTasks = new ThreadSafeQueue<>();
         }
@@ -76,8 +80,8 @@ public class ThreadPoolImpl implements ThreadPool {
                 }
             }
 
-            if (exeption != null) {
-                throw new LightExecutionException(exeption);
+            if (exception != null) {
+                throw new LightExecutionException(exception);
             }
 
             return result;
@@ -86,14 +90,29 @@ public class ThreadPoolImpl implements ThreadPool {
 
         @Override
         public <R> LightFuture<R> thenApply(Function<T, R> function) {
-            if (isReady()) {
-
-            }
-            return null;
+            var newTask = new LightFutureImpl<>(() -> {
+                try {
+                    return function.apply(LightFutureImpl.this.get());
+                } catch (LightExecutionException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            nextTasks.push(newTask);
+            return newTask;
         }
 
-        private void calculate() {
-
+        private void calculate() throws InterruptedException {
+            try {
+                result = task.get();
+            } catch (Throwable e) {
+                exception = e;
+            }
+            var needToAdd = nextTasks;
+            nextTasks = taskQueue;
+            task = null;
+            while(!needToAdd.isEmpty()) {
+                taskQueue.push(needToAdd.pop());
+            }
         }
     }
 }
