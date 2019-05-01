@@ -10,7 +10,7 @@ public class LightExecutionException extends Exception {
      *
      * @param cause результат выполнения задачи.
      */
-    public LightExecutionException(final Throwable cause) {
+    public LightExecutionException(Throwable cause) {
         super(cause);
     }
 }
