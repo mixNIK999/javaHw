@@ -24,7 +24,7 @@ public class ThreadPoolImpl implements ThreadPool {
         threadList = new ArrayList<>(number);
         taskQueue = new ThreadSafeQueue<>();
         for (int i = 0; i < number; i++) {
-            threadList.set(i, new Thread(() -> {
+            var thread = new Thread(() -> {
                 while (true) {
                     try {
                         taskQueue.pop().calculate();
@@ -32,7 +32,9 @@ public class ThreadPoolImpl implements ThreadPool {
                         return;
                     }
                 }
-            }));
+            });
+            threadList.add(thread);
+            thread.start();
         }
     }
 
@@ -66,7 +68,7 @@ public class ThreadPoolImpl implements ThreadPool {
 
         private synchronized void push(@NotNull E data) {
             queue.add(data);
-            queue.notify();
+            notify();
         }
 
         private synchronized E pop() throws InterruptedException {
