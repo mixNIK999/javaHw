@@ -7,14 +7,23 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Реализация интерфейса ThreadPool с фиксированным количеством потоков.
+ */
 public class ThreadPoolImpl implements ThreadPool {
-    private ArrayList<Thread> threadList;
-    private ThreadSafeQueue<LightFutureImpl> taskQueue;
 
-    public ThreadPoolImpl(int size) {
-        threadList = new ArrayList<>(size);
+    private final ArrayList<Thread> threadList;
+    private final ThreadSafeQueue<LightFutureImpl> taskQueue;
+
+    /**
+     * Создает новый пул с заданным числом потоков.
+     *
+     * @param number - количество потоков.
+     */
+    public ThreadPoolImpl(int number) {
+        threadList = new ArrayList<>(number);
         taskQueue = new ThreadSafeQueue<>();
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < number; i++) {
             threadList.set(i, new Thread(() -> {
                 while (true) {
                     try {
@@ -27,6 +36,9 @@ public class ThreadPoolImpl implements ThreadPool {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <T> LightFuture<T> submit(Supplier<T> task) {
         var newTask = new LightFutureImpl<>(task);
@@ -34,6 +46,9 @@ public class ThreadPoolImpl implements ThreadPool {
         return newTask;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void shutdown() {
         for (var thread : threadList) {
@@ -42,9 +57,10 @@ public class ThreadPoolImpl implements ThreadPool {
     }
 
     private static class ThreadSafeQueue<E> {
-        Queue<E> queue;
 
-        public ThreadSafeQueue() {
+        final Queue<E> queue;
+
+        private ThreadSafeQueue() {
             queue = new ArrayDeque<>();
         }
 
@@ -66,6 +82,7 @@ public class ThreadPoolImpl implements ThreadPool {
     }
 
     private class LightFutureImpl<T> implements LightFuture<T> {
+
         private volatile Supplier<T> task;
         private T result;
         private Throwable exception;
@@ -82,7 +99,7 @@ public class ThreadPoolImpl implements ThreadPool {
         }
 
         @Override
-        public synchronized T get() throws LightExecutionException{
+        public synchronized T get() throws LightExecutionException {
             while (!isReady()) {
                 try {
                     wait();
@@ -125,7 +142,7 @@ public class ThreadPoolImpl implements ThreadPool {
                 task = null;
                 notifyAll();
             }
-            while(!needToAdd.isEmpty()) {
+            while (!needToAdd.isEmpty()) {
                 taskQueue.push(needToAdd.pop());
             }
         }
