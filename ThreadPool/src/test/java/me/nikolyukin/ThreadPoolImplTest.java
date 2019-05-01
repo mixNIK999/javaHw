@@ -109,7 +109,9 @@ class ThreadPoolImplTest {
 
     @Test
     void supplierWithException() {
-        var res = singleThreadPool.submit(() -> {throw new RuntimeException("massage");});
+        var res = singleThreadPool.submit(() -> {
+            throw new RuntimeException("massage");
+        });
         assertThrows(LightExecutionException.class, res::get);
         try {
             res.get();
@@ -144,6 +146,40 @@ class ThreadPoolImplTest {
         latch.countDown();
         for (int i = n - 1; i >= 0; i--) {
             assertEquals(Integer.valueOf(i), multiThreadPoolRes.get(i).get());
+        }
+    }
+
+    @Test
+    void thenApplyWide() throws LightExecutionException {
+        int n = 2 * multiThreadPoolSize;
+        var latch = new CountDownLatch(1);
+        var multiThreadPoolRes = new ArrayList<LightFuture<Integer>>(n);
+        Function<Integer, Integer> inc = (i) -> i + 1;
+        multiThreadPoolRes.add(multiThreadPool.submit(() -> {
+            try {
+                latch.await();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            return 0;
+        }));
+        for (int i = 0; i < n - 1; i++) {
+            multiThreadPoolRes.add(multiThreadPoolRes.get(0).thenApply(inc));
+        }
+
+        for (int i = n - 1; i >= 0; i--) {
+            assertFalse(multiThreadPoolRes.get(i).isReady());
+        }
+        assertEquals("done", multiThreadPool.submit(() -> "done").get());
+
+        latch.countDown();
+        assertEquals(Integer.valueOf(0), multiThreadPoolRes.get(0).get());
+        for (int i = 0; i < n; i++) {
+            multiThreadPoolRes.add(multiThreadPoolRes.get(0).thenApply(inc));
+        }
+
+        for (int i = 1; i < multiThreadPoolRes.size(); i++) {
+            assertEquals(Integer.valueOf(1), multiThreadPoolRes.get(i).get());
         }
     }
 }
