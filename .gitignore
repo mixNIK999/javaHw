@@ -82,9 +82,7 @@ gradle-app.setting
 **/.idea/**/gradle.xml
 **/.idea/**/libraries
 
-
 Homework_6/out/production/resources/META-INF/
 Homework_5/phoneBook\.db
 Homework_3/\.idea/uiDesigner\.xml
 Homework_3/out/production/resources/META-INF/plugin\.xml
-
