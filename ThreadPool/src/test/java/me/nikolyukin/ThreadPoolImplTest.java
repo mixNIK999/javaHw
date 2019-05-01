@@ -182,4 +182,12 @@ class ThreadPoolImplTest {
             assertEquals(Integer.valueOf(1), multiThreadPoolRes.get(i).get());
         }
     }
+
+    @Test
+    void thenApplySupplierWithException() {
+        var res = singleThreadPool.submit(() -> {
+            throw new RuntimeException("massage");
+        }).thenApply(Function.identity());
+        assertThrows(LightExecutionException.class, res::get);
+    }
 }
