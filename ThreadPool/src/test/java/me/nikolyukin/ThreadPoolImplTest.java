@@ -3,12 +3,14 @@ package me.nikolyukin;
 import static java.lang.Thread.interrupted;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +36,7 @@ class ThreadPoolImplTest {
 
     @Test
     void submitSimpleSingle() throws LightExecutionException {
-        int n = 20;
+        int n = 2 * multiThreadPoolSize;
         var singleThreadPoolRes = new ArrayList<LightFuture<String>>(n);
         for (int i = 0; i < n; i++) {
             singleThreadPoolRes.add(singleThreadPool.submit(() -> "test"));
@@ -46,7 +48,7 @@ class ThreadPoolImplTest {
 
     @Test
     void submitSimpleMulti() throws LightExecutionException {
-        int n = 20;
+        int n = 2 * multiThreadPoolSize;
         var multiThreadPoolRes = new ArrayList<LightFuture<String>>(n);
         for (int i = 0; i < n; i++) {
             multiThreadPoolRes.add(multiThreadPool.submit(() -> "test"));
@@ -98,10 +100,50 @@ class ThreadPoolImplTest {
         for (int i = n - 1; i >= 0; i--) {
             assertFalse(multiThreadPoolRes.get(i).isReady());
         }
-        
+
         multiThreadPoolRes.add(multiThreadPool.submit(task));
         for (int i = n; i >= 0; i--) {
             assertEquals("done", multiThreadPoolRes.get(i).get());
+        }
+    }
+
+    @Test
+    void supplierWithException() {
+        var res = singleThreadPool.submit(() -> {throw new RuntimeException("massage");});
+        assertThrows(LightExecutionException.class, res::get);
+        try {
+            res.get();
+        } catch (LightExecutionException e) {
+            assertEquals("massage", e.getCause().getMessage());
+        }
+    }
+
+    @Test
+    void thenApplyDeep() throws LightExecutionException {
+        int n = 2 * multiThreadPoolSize;
+        var latch = new CountDownLatch(1);
+        var multiThreadPoolRes = new ArrayList<LightFuture<Integer>>(n);
+        Function<Integer, Integer> inc = (i) -> i + 1;
+        multiThreadPoolRes.add(multiThreadPool.submit(() -> {
+            try {
+                latch.await();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            return 0;
+        }));
+        for (int i = 0; i < n - 1; i++) {
+            multiThreadPoolRes.add(multiThreadPoolRes.get(i).thenApply(inc));
+        }
+
+        for (int i = n - 1; i >= 0; i--) {
+            assertFalse(multiThreadPoolRes.get(i).isReady());
+        }
+
+        assertEquals("done", multiThreadPool.submit(() -> "done").get());
+        latch.countDown();
+        for (int i = n - 1; i >= 0; i--) {
+            assertEquals(Integer.valueOf(i), multiThreadPoolRes.get(i).get());
         }
     }
 }
