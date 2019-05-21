@@ -62,7 +62,9 @@ public class Cannon {
 
 
     public Bullet shoot() {
-        var bullet = new Bullet(new Circle(0, 0, ammoRadius[ammoType], Color.LIGHTGREY), Point2D.ZERO, ammoPower[ammoType]);
+        var bulletSprite = new Circle(0, 0, ammoRadius[ammoType], Color.LIGHTGREY);
+        bulletSprite.setStroke(Color.BLACK);
+        var bullet = new Bullet(bulletSprite, Point2D.ZERO, ammoPower[ammoType]);
         bullet.setSpeedVector(pointByLengthAndAngle(bulletSpeed[ammoType], angle));
         bullet.getSprite().setTranslateX(sprite.getLayoutX() + sprite.getTranslateX());
         bullet.getSprite().setTranslateY(sprite.getLayoutY() + sprite.getTranslateY());

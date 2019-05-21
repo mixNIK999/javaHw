@@ -24,7 +24,7 @@ public class Bullet {
     }
 
     public Bullet(Circle sprite, Point2D speedVector, double g, double power) {
-        speedVector = speedVector;
+        this.speedVector = speedVector;
         this.g = g;
         this.power = power;
         this.sprite = sprite;
@@ -38,7 +38,10 @@ public class Bullet {
     }
 
     public Explosion boom() {
-        return new Explosion(new Circle(power, Color.DARKORANGE));
+        var explosionSprite = new Circle(power, Color.DARKORANGE);
+        explosionSprite.setTranslateX(sprite.getCenterX() + sprite.getTranslateX());
+        explosionSprite.setTranslateY(sprite.getCenterY() + sprite.getTranslateY());
+        return new Explosion(explosionSprite);
     }
 
 

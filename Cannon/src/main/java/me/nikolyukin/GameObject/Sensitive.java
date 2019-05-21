@@ -7,4 +7,6 @@ public interface Sensitive {
     void onHit();
 
     Shape getHitBox();
+
+    boolean isAlive();
 }

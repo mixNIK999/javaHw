@@ -4,14 +4,15 @@ package me.nikolyukin;
 import static java.lang.Math.round;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Group;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Shape;
 import me.nikolyukin.GameObject.Bullet;
 import me.nikolyukin.GameObject.Cannon;
+import me.nikolyukin.GameObject.Explosion;
 import me.nikolyukin.GameObject.Sensitive;
 import me.nikolyukin.GameObject.Target;
 
@@ -32,7 +33,8 @@ public class Controller {
     private final double height;
     private List<Bullet> bullets = new ArrayList<>();
     private final List<Shape> barriers = new ArrayList<>();
-    private final List<Sensitive> targets = new ArrayList<>();
+    private List<Sensitive> targets = new ArrayList<>();
+    private List<Explosion> explosions = new ArrayList<>();
 
 
     public Controller(Pane root, Group cannonSprite, List<Shape> mounts, Shape targetSprite, double height, double width) {
@@ -57,16 +59,20 @@ public class Controller {
                 if (goLeft) {
                     cannon.goTo(-speed, mounts);
                 }
+                cannon.gravity(mounts);
+
                 if (rotateClockwise) {
                     cannon.rotate(-rotateSpeed);
                 }
                 if (rotateCounterclockwise) {
                     cannon.rotate(rotateSpeed);
                 }
+
                 if(changeAmmo) {
                     cannon.nextAmmo();
                     changeAmmo = false;
                 }
+
                 if (readyForSoot) {
                     Bullet newBullet = cannon.shoot();
                     root.getChildren().add(newBullet.getSprite());
@@ -81,11 +87,40 @@ public class Controller {
                         flyingBullets.add(bullet);
                     } else {
                         root.getChildren().remove(bullet.getSprite());
+                        var explosion = bullet.boom();
+                        explosion.hit(targets);
+                        root.getChildren().add(explosion.getSprite());
+                        explosions.add(explosion);
+
                     }
                 }
                 bullets = flyingBullets;
 
-                cannon.gravity(mounts);
+                var fadingExplosions = new ArrayList<Explosion>();
+                for (var explosion : explosions) {
+                    if (explosion.fading()) {
+                        fadingExplosions.add(explosion);
+                    } else {
+                        root.getChildren().remove(explosion.getSprite());
+                    }
+                }
+                explosions = fadingExplosions;
+
+                var aliveTargets = new ArrayList<Sensitive>();
+                for (var target : targets) {
+                    if (target.isAlive()) {
+                        aliveTargets.add(target);
+                    } else {
+                        root.getChildren().remove(target.getHitBox());
+                    }
+                }
+                targets = aliveTargets;
+
+                if (targets.isEmpty()) {
+//                    var pane = new BoarderPane();
+//                    root.getChildren().add(new StackPane())
+                    timer.stop();
+                }
             }
         };
     }
