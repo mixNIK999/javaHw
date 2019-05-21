@@ -1,15 +1,11 @@
 package me.nikolyukin;
 
 import java.util.Objects;
-import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class CannonApp extends Application {
@@ -35,11 +31,29 @@ public class CannonApp extends Application {
                 case RIGHT:
                     controller.setPressedRight(true);
                     break;
-//                case LEFT:
-//                    controller.setPressedLeft(true);
-//                    break;
+                case UP:
+                    controller.setPressedUp(true);
+                    break;
+                case DOWN:
+                    controller.setPressedDown(true);
+                    break;
+            }
+        });
 
-
+        scene.setOnKeyReleased(event -> {
+            switch (event.getCode()) {
+                case LEFT:
+                    controller.setPressedLeft(false);
+                    break;
+                case RIGHT:
+                    controller.setPressedRight(false);
+                    break;
+                case UP:
+                    controller.setPressedUp(false);
+                    break;
+                case DOWN:
+                    controller.setPressedDown(false);
+                    break;
             }
         });
 

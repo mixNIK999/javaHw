@@ -11,8 +11,9 @@ public class Controller {
     private List<Node> mounts;
 
     private AnimationTimer timer;
-
     private boolean isPressedUp, isPressedDown, isPressedRight, isPressedLeft;
+
+    private final int speed = 3;
 
     public Controller(Group cannonSprite, List<Node> mounts) {
         this.cannon = new Cannon(cannonSprite);
@@ -23,10 +24,10 @@ public class Controller {
             public void handle(long now) {
 //                cannon.setTranslateY(cannon.getTranslateY() - 1);
                 if (isPressedRight) {
-                    cannon.go(5, mounts);
+                    cannon.goTo(speed, mounts);
                 }
                 if (isPressedLeft) {
-                    cannon.go(-5, mounts);
+                    cannon.goTo(-speed, mounts);
                 }
             }
         };
