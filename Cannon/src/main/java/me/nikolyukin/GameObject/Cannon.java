@@ -1,4 +1,4 @@
-package me.nikolyukin;
+package me.nikolyukin.GameObject;
 
 import static java.lang.Math.abs;
 import static me.nikolyukin.Utility.checkAllCollision;

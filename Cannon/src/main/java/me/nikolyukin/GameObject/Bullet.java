@@ -1,4 +1,4 @@
-package me.nikolyukin;
+package me.nikolyukin.GameObject;
 
 import static me.nikolyukin.Utility.checkAllCollision;
 import static me.nikolyukin.Utility.moveX;
