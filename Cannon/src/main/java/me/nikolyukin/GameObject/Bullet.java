@@ -17,8 +17,10 @@ public class Bullet {
 
     private Circle sprite;
 
+    private static double defaultG = 0.1;
+
     public Bullet(Circle sprite, Point2D speedVector, double power) {
-        this(sprite, speedVector, 10, power);
+        this(sprite, speedVector, defaultG, power);
     }
 
     public Bullet(Circle sprite, Point2D speedVector, double g, double power) {
@@ -32,19 +34,13 @@ public class Bullet {
         moveX(sprite, speedVector.getX());
         moveY(sprite, speedVector.getY());
         speedVector = speedVector.add(0, g);
-        return checkAllCollision(sprite, barriers);
+        return !checkAllCollision(sprite, barriers) && sprite.getTranslateY() >= 0;
     }
 
     public Explosion boom() {
         return new Explosion(new Circle(power, Color.DARKORANGE));
     }
 
-    public Bullet(Bullet other) {
-        this.speedVector = other.speedVector;
-        this.g = other.g;
-        this.power = other.power;
-        this.sprite = other.sprite;
-    }
 
     public void setSpeedVector(Point2D speedVector) {
         this.speedVector = speedVector;
