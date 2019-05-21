@@ -25,7 +25,8 @@ public class CannonApp extends Application {
         var cannon = (Group) scene.lookup("#cannon");
         var landscape = (Parent) scene.lookup("#landscape");
         List<Shape> mounts = landscape.getChildrenUnmodifiable().stream().map(e -> (Shape) e).collect(Collectors.toList());
-        var controller = new Controller(cannon, mounts, scene.heightProperty().get());
+
+        var controller = new Controller(cannon, mounts, root.prefHeight(0), root.prefWidth(0));
 
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {

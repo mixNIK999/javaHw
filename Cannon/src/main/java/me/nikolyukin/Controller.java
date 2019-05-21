@@ -1,10 +1,11 @@
 package me.nikolyukin;
 
+
+import static java.lang.Math.round;
+
 import java.util.List;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.shape.Shape;
 
 public class Controller {
@@ -15,21 +16,34 @@ public class Controller {
     private AnimationTimer timer;
     private boolean isPressedUp, isPressedDown, isPressedRight, isPressedLeft;
 
-    private final int speed = 3;
+    private final int speed;
+    private final int speedCoefficient = 300;
+    private final double width;
+    private final double height;
+    private final double rotateSpeed = 5;
 
-    public Controller(Group cannonSprite, List<Shape> mounts, double height) {
-        this.cannon = new Cannon(cannonSprite, height);
+    public Controller(Group cannonSprite, List<Shape> mounts, double height, double width) {
+        this.cannon = new Cannon(cannonSprite);
         this.mounts = mounts;
+        this.width = width;
+        this.height = height;
+
+        speed = Integer.max(1, (int) round(width / speedCoefficient));
 
         timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-//                cannon.setTranslateY(cannon.getTranslateY() - 1);
                 if (isPressedRight) {
                     cannon.goTo(speed, mounts);
                 }
                 if (isPressedLeft) {
                     cannon.goTo(-speed, mounts);
+                }
+                if (isPressedUp) {
+                    cannon.rotate(-rotateSpeed);
+                }
+                if (isPressedDown) {
+                    cannon.rotate(rotateSpeed);
                 }
 
                 cannon.gravity(mounts);
