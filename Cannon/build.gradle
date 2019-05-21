@@ -4,6 +4,8 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.0.7'
 }
 
+mainClassName = 'me.nikolyukin.CannonApp'
+
 version '1.0'
 
 sourceCompatibility = 11
@@ -29,5 +31,5 @@ javadoc {
 
 javafx {
     version = "11.0.2"
-    modules = [ 'javafx.controls' ]
+    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics' ]
 }
