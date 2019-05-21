@@ -4,7 +4,6 @@ import static me.nikolyukin.Utility.checkAllCollision;
 import static me.nikolyukin.Utility.moveX;
 import static me.nikolyukin.Utility.moveY;
 
-import java.awt.Point;
 import java.util.List;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
@@ -16,13 +15,13 @@ public class Bullet {
     private final double g;
     private double power;
 
-    private Shape sprite;
+    private Circle sprite;
 
-    public Bullet(Shape sprite, Point2D speedVector, double power) {
+    public Bullet(Circle sprite, Point2D speedVector, double power) {
         this(sprite, speedVector, 10, power);
     }
 
-    public Bullet(Shape sprite, Point2D speedVector, double g, double power) {
+    public Bullet(Circle sprite, Point2D speedVector, double g, double power) {
         speedVector = speedVector;
         this.g = g;
         this.power = power;
@@ -49,5 +48,9 @@ public class Bullet {
 
     public void setSpeedVector(Point2D speedVector) {
         this.speedVector = speedVector;
+    }
+
+    public Circle getSprite() {
+        return sprite;
     }
 }

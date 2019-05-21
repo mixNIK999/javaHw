@@ -17,7 +17,8 @@
             <Polygon fill="DODGERBLUE" layoutX="226.0" layoutY="-41.0" points="-89.0, 40.0, 50.0, 40.0, -26.0, 241.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.topAnchor="-1.0" />
          </children>
       </AnchorPane>
-      <Group fx:id="cannon" layoutX="50.0" layoutY="404.0" AnchorPane.bottomAnchor="0.0">
+      <Circle fx:id="target" fill="#e11111" radius="10.0" stroke="#f5c914" strokeType="INSIDE" strokeWidth="5.0" AnchorPane.bottomAnchor="50.0" AnchorPane.rightAnchor="50.0" />
+      <Group fx:id="cannon" layoutX="50.0" layoutY="404.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="TRANSPARENT" height="30.0" layoutX="-50.0" layoutY="-15.0" stroke="TRANSPARENT" strokeMiterLimit="0.0" strokeType="INSIDE" width="100.0" />
             <Arc fx:id="gun" fill="#9a9a9e" layoutX="20.0" length="270.0" radiusX="30.0" radiusY="10.0" startAngle="45.0" stroke="BLACK" strokeType="INSIDE" />

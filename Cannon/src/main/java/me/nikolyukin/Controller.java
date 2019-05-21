@@ -3,11 +3,16 @@ package me.nikolyukin;
 
 import static java.lang.Math.round;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Group;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Shape;
+import me.nikolyukin.GameObject.Bullet;
 import me.nikolyukin.GameObject.Cannon;
+import me.nikolyukin.GameObject.Target;
 
 public class Controller {
 
@@ -15,15 +20,17 @@ public class Controller {
     private List<Shape> mounts;
 
     private AnimationTimer timer;
-    private boolean isPressedUp, isPressedDown, isPressedRight, isPressedLeft;
+    private boolean rotateClockwise, rotateCounterclockwise, goRight, goLeft;
+    private boolean readyForSoot, changeAmmo;
 
     private final int speed;
     private final int speedCoefficient = 300;
     private final double width;
     private final double height;
     private final double rotateSpeed = 5;
+    private final List<Bullet> bullets = new ArrayList<>();
 
-    public Controller(Group cannonSprite, List<Shape> mounts, double height, double width) {
+    public Controller(Pane root, Group cannonSprite, List<Shape> mounts, Shape targetSprite, double height, double width) {
         this.cannon = new Cannon(cannonSprite);
         this.mounts = mounts;
         this.width = width;
@@ -34,17 +41,25 @@ public class Controller {
         timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                if (isPressedRight) {
+                if (goRight) {
                     cannon.goTo(speed, mounts);
                 }
-                if (isPressedLeft) {
+                if (goLeft) {
                     cannon.goTo(-speed, mounts);
                 }
-                if (isPressedUp) {
+                if (rotateClockwise) {
                     cannon.rotate(-rotateSpeed);
                 }
-                if (isPressedDown) {
+                if (rotateCounterclockwise) {
                     cannon.rotate(rotateSpeed);
+                }
+                if(changeAmmo) {
+                    cannon.nextAmmo();
+                    changeAmmo = false;
+                }
+                if (readyForSoot) {
+                    bullets.add(cannon.shoot());
+                    readyForSoot = false;
                 }
 
                 cannon.gravity(mounts);
@@ -56,19 +71,27 @@ public class Controller {
         return timer;
     }
 
-    public void setPressedUp(boolean pressedUp) {
-        this.isPressedUp = pressedUp;
+    public void setRotateClockwise(boolean rotateClockwise) {
+        this.rotateClockwise = rotateClockwise;
     }
 
-    public void setPressedDown(boolean pressedDown) {
-        this.isPressedDown = pressedDown;
+    public void setRotateCounterclockwise(boolean rotateCounterclockwise) {
+        this.rotateCounterclockwise = rotateCounterclockwise;
     }
 
-    public void setPressedRight(boolean pressedRight) {
-        this.isPressedRight = pressedRight;
+    public void setGoRight(boolean goRight) {
+        this.goRight = goRight;
     }
 
-    public void setPressedLeft(boolean pressedLeft) {
-        this.isPressedLeft = pressedLeft;
+    public void setGoLeft(boolean goLeft) {
+        this.goLeft = goLeft;
+    }
+
+    public void setReadyForSoot(boolean readyForSoot) {
+        this.readyForSoot = readyForSoot;
+    }
+
+    public void setChangeAmmo(boolean changeAmmo) {
+        this.changeAmmo = changeAmmo;
     }
 }

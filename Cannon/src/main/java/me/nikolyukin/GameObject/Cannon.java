@@ -64,6 +64,8 @@ public class Cannon {
     public Bullet shoot() {
         var bullet = new Bullet(ammo[ammoType]);
         bullet.setSpeedVector(pointByLengthAndAngle(power, sprite.getRotate()));
+        bullet.getSprite().setCenterX(sprite.getTranslateX());
+        bullet.getSprite().setCenterY(sprite.getTranslateY());
         return bullet;
     }
 

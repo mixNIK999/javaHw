@@ -8,6 +8,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 
@@ -15,32 +17,39 @@ public class CannonApp extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(
+        Pane root = FXMLLoader.load(
             Objects.requireNonNull(getClass().getClassLoader().getResource("main.fxml")));
 
         var scene = new Scene(root);
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
 
-        var cannon = (Group) scene.lookup("#cannon");
+        var cannonSprite = (Group) scene.lookup("#cannon");
         var landscape = (Parent) scene.lookup("#landscape");
+        var targetSprite = (Circle) scene.lookup("#target");
         List<Shape> mounts = landscape.getChildrenUnmodifiable().stream().map(e -> (Shape) e).collect(Collectors.toList());
 
-        var controller = new Controller(cannon, mounts, root.prefHeight(0), root.prefWidth(0));
+        var controller = new Controller(root, cannonSprite, mounts, targetSprite, root.prefHeight(0), root.prefWidth(0));
 
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case LEFT:
-                    controller.setPressedLeft(true);
+                    controller.setGoLeft(true);
                     break;
                 case RIGHT:
-                    controller.setPressedRight(true);
+                    controller.setGoRight(true);
                     break;
                 case UP:
-                    controller.setPressedUp(true);
+                    controller.setRotateClockwise(true);
                     break;
                 case DOWN:
-                    controller.setPressedDown(true);
+                    controller.setRotateCounterclockwise(true);
+                    break;
+                case ENTER:
+                    controller.setReadyForSoot(true);
+                    break;
+                case SPACE:
+                    controller.setChangeAmmo(true);
                     break;
             }
         });
@@ -48,16 +57,16 @@ public class CannonApp extends Application {
         scene.setOnKeyReleased(event -> {
             switch (event.getCode()) {
                 case LEFT:
-                    controller.setPressedLeft(false);
+                    controller.setGoLeft(false);
                     break;
                 case RIGHT:
-                    controller.setPressedRight(false);
+                    controller.setGoRight(false);
                     break;
                 case UP:
-                    controller.setPressedUp(false);
+                    controller.setRotateClockwise(false);
                     break;
                 case DOWN:
-                    controller.setPressedDown(false);
+                    controller.setRotateCounterclockwise(false);
                     break;
             }
         });
