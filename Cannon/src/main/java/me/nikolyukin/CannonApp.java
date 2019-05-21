@@ -1,11 +1,14 @@
 package me.nikolyukin;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 
 public class CannonApp extends Application {
@@ -21,7 +24,8 @@ public class CannonApp extends Application {
 
         var cannon = (Group) scene.lookup("#cannon");
         var landscape = (Parent) scene.lookup("#landscape");
-        var controller = new Controller(cannon, landscape.getChildrenUnmodifiable());
+        List<Shape> mounts = landscape.getChildrenUnmodifiable().stream().map(e -> (Shape) e).collect(Collectors.toList());
+        var controller = new Controller(cannon, mounts, scene.heightProperty().get());
 
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {

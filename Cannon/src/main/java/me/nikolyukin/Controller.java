@@ -4,19 +4,21 @@ import java.util.List;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.shape.Shape;
 
 public class Controller {
 
     private Cannon cannon;
-    private List<Node> mounts;
+    private List<Shape> mounts;
 
     private AnimationTimer timer;
     private boolean isPressedUp, isPressedDown, isPressedRight, isPressedLeft;
 
     private final int speed = 3;
 
-    public Controller(Group cannonSprite, List<Node> mounts) {
-        this.cannon = new Cannon(cannonSprite);
+    public Controller(Group cannonSprite, List<Shape> mounts, double height) {
+        this.cannon = new Cannon(cannonSprite, height);
         this.mounts = mounts;
 
         timer = new AnimationTimer() {
@@ -29,6 +31,8 @@ public class Controller {
                 if (isPressedLeft) {
                     cannon.goTo(-speed, mounts);
                 }
+
+                cannon.gravity(mounts);
             }
         };
     }
