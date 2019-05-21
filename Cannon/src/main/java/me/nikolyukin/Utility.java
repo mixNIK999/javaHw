@@ -1,6 +1,10 @@
 package me.nikolyukin;
 
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+
 import java.util.List;
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
@@ -25,5 +29,9 @@ public class Utility {
 
     public static boolean checkAllCollision(Shape a, List<Shape> shapes) {
         return shapes.stream().anyMatch(e -> checkCollision(a, e));
+    }
+
+    public static Point2D pointByLengthAndAngle(double length, double angle) {
+        return new Point2D(length*cos(angle), length * sin(angle));
     }
 }

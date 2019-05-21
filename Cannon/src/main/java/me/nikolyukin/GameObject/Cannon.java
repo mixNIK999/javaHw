@@ -5,8 +5,12 @@ import static me.nikolyukin.Utility.checkAllCollision;
 import static me.nikolyukin.Utility.checkCollision;
 import static me.nikolyukin.Utility.moveX;
 import static me.nikolyukin.Utility.moveY;
+import static me.nikolyukin.Utility.pointByLengthAndAngle;
 import static me.nikolyukin.Utility.rotateNode;
 
+
+import javafx.geometry.Point2D;
+import javafx.scene.paint.Color;
 import java.util.List;
 import javafx.scene.Group;
 import javafx.scene.shape.Arc;
@@ -18,6 +22,14 @@ public class Cannon {
 
     private Circle wheel;
     private Arc gun;
+    private final double power = 10;
+
+    private final static Bullet[] ammo = new Bullet[]{
+        new Bullet(new Circle(2, Color.LIGHTGREY), Point2D.ZERO, 2),
+        new Bullet(new Circle(3, Color.LIGHTGREY), Point2D.ZERO, 5),
+        new Bullet(new Circle(5, Color.LIGHTGREY), Point2D.ZERO, 10)};
+
+    private int ammoType = 0;
 
     public Cannon(Group sprite) {
         this.sprite = sprite;
@@ -43,6 +55,18 @@ public class Cannon {
             moveY(sprite,1);
         }
     }
+
+    public void nextAmmo() {
+        ammoType = (ammoType == 2)? 0 : ammoType + 1;
+    }
+
+
+    public Bullet shoot() {
+        var bullet = new Bullet(ammo[ammoType]);
+        bullet.setSpeedVector(pointByLengthAndAngle(power, sprite.getRotate()));
+        return bullet;
+    }
+
 
     public void rotate(double angle) {
         rotateNode(sprite, angle);
