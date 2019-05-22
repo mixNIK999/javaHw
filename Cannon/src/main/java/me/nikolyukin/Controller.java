@@ -7,9 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Group;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.TilePane;
 import javafx.scene.shape.Shape;
+import javafx.scene.text.Text;
 import me.nikolyukin.GameObject.Bullet;
 import me.nikolyukin.GameObject.Cannon;
 import me.nikolyukin.GameObject.Explosion;
@@ -37,7 +40,7 @@ public class Controller {
     private List<Explosion> explosions = new ArrayList<>();
 
 
-    public Controller(Pane root, Group cannonSprite, List<Shape> mounts, Shape targetSprite, double height, double width) {
+    public Controller(AnchorPane root, Group cannonSprite, List<Shape> mounts, Shape targetSprite, double height, double width) {
         this.cannon = new Cannon(cannonSprite);
         this.mounts = mounts;
         this.width = width;
@@ -117,8 +120,13 @@ public class Controller {
                 targets = aliveTargets;
 
                 if (targets.isEmpty()) {
-//                    var pane = new BoarderPane();
-//                    root.getChildren().add(new StackPane())
+                    var winPane = new StackPane(new Text("WIN"));
+                    AnchorPane.setBottomAnchor(winPane, 0d);
+                    AnchorPane.setTopAnchor(winPane, 0d);
+                    AnchorPane.setLeftAnchor(winPane, 0d);
+                    AnchorPane.setRightAnchor(winPane, 0d);
+
+                    root.getChildren().add(winPane);
                     timer.stop();
                 }
             }

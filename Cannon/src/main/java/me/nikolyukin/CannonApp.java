@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
@@ -17,7 +18,7 @@ public class CannonApp extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Pane root = FXMLLoader.load(
+        AnchorPane root = FXMLLoader.load(
             Objects.requireNonNull(getClass().getClassLoader().getResource("main.fxml")));
 
         var scene = new Scene(root);

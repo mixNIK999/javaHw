@@ -12,12 +12,13 @@
       <AnchorPane fx:id="landscape" layoutX="545.0" layoutY="104.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Polygon fill="DODGERBLUE" layoutX="152.0" layoutY="378.0" points="-50.0, 40.0, 158.0, 40.0, 56.0, -60.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.bottomAnchor="0.0" />
-            <Polygon fill="DODGERBLUE" layoutX="459.0" layoutY="-40.0" points="-50.0, 40.0, 172.0, 40.0, 52.0, 185.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.topAnchor="0.0" />
-            <Polygon fill="DODGERBLUE" layoutX="476.0" layoutY="375.0" points="-50.0, 40.0, 158.0, 40.0, 55.0, -132.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.bottomAnchor="0.0" />
+            <Polygon fill="DODGERBLUE" layoutX="459.0" layoutY="-40.0" points="-50.0, 40.0, 172.0, 40.0, 78.0, 237.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.topAnchor="0.0" />
+            <Polygon fill="DODGERBLUE" layoutX="459.0" layoutY="410.0" points="-50.0, 40.0, 158.0, 40.0, 55.0, -132.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.bottomAnchor="0.0" />
             <Polygon fill="DODGERBLUE" layoutX="226.0" layoutY="-41.0" points="-89.0, 40.0, 50.0, 40.0, -26.0, 241.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.topAnchor="-1.0" />
+            <Polygon fill="DODGERBLUE" layoutX="717.0" layoutY="410.0" points="-127.0, -40.0, 50.0, 40.0, 50.0, -40.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.rightAnchor="0.0" />
          </children>
       </AnchorPane>
-      <Circle fx:id="target" fill="#e11111" radius="10.0" stroke="#f5c914" strokeType="INSIDE" strokeWidth="5.0" AnchorPane.bottomAnchor="50.0" AnchorPane.rightAnchor="50.0" />
+      <Circle fx:id="target" fill="#e11111" layoutX="620.0" layoutY="360.0" radius="10.0" stroke="#f5c914" strokeType="INSIDE" strokeWidth="5.0" />
       <Group fx:id="cannon" layoutX="50.0" layoutY="404.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="TRANSPARENT" height="30.0" layoutX="-50.0" layoutY="-15.0" stroke="TRANSPARENT" strokeMiterLimit="0.0" strokeType="INSIDE" width="100.0" />
