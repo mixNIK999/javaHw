@@ -6,13 +6,12 @@ jdk:
 os:
   - linux
 env:
-
+  - PROJECT_DIR=Cannon
   - PROJECT_DIR=Homework_1
   - PROJECT_DIR=Homework_2
   - PROJECT_DIR=Homework_3
   - PROJECT_DIR=Homework_5
   - PROJECT_DIR=Homework_6
   - PROJECT_DIR=Qsort
-
+  
 script: cd $PROJECT_DIR && bash gradlew check
-
